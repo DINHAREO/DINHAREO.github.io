@@ -43,7 +43,7 @@
         .email-form {
             margin-top: 2rem;
         }
-        .email-form form {
+        form {
             display: flex;
             justify-content: center;
         }
@@ -63,11 +63,6 @@
             cursor: pointer;
             font-size: 1rem;
         }
-        #thankyou_message {
-            display: none;
-            color: #4CAF50;
-            margin-top: 1rem;
-        }
     </style>
 </head>
 <body>
@@ -78,43 +73,12 @@
         <p>Join us on a journey through the Lunar Labyrinth.</p>
         
         <div class="email-form">
-            <!-- Simple form that directly submits to Formspree -->
-            <form id="email-form" action="https://formspree.io/f/mdkaqjjy" method="POST">
+            <!-- Basic Formspree form with no JavaScript -->
+            <form action="https://formspree.io/f/mdkaqjjy" method="POST">
                 <input type="email" name="email" placeholder="Enter your email for updates" required>
                 <button type="submit">Notify Me</button>
             </form>
-            
-            <!-- Thank you message that appears after submission -->
-            <div id="thankyou_message">
-                Thanks! We'll keep you updated.
-            </div>
         </div>
     </div>
-
-    <script>
-        // Get the form and thank you message elements
-        var form = document.getElementById("email-form");
-        var thankYouMessage = document.getElementById("thankyou_message");
-        
-        // Handle the form submission
-        form.addEventListener("submit", function(event) {
-            // Let the form submit normally to Formspree
-            // Don't prevent default behavior
-            
-            // Store that we've submitted the form
-            localStorage.setItem("formSubmitted", "true");
-        });
-        
-        // Check if we've returned from a form submission
-        window.onload = function() {
-            // If the URL has a query parameter from Formspree
-            if (window.location.search.includes("submitted=")) {
-                // Hide the form
-                form.style.display = "none";
-                // Show the thank you message
-                thankYouMessage.style.display = "block";
-            }
-        };
-    </script>
 </body>
 </html>
