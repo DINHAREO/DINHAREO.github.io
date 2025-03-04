@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon - NFT Project</title>
+    <title>Coming Soon - Lunar Labyrinth</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,6 +43,10 @@
         .email-form {
             margin-top: 2rem;
         }
+        .email-form form {
+            display: flex;
+            justify-content: center;
+        }
         input[type="email"] {
             padding: 10px 15px;
             width: 300px;
@@ -59,6 +63,11 @@
             cursor: pointer;
             font-size: 1rem;
         }
+        .success-message {
+            display: none;
+            color: #4CAF50;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -69,9 +78,29 @@
         <p>Join us on a journey through the Lunar Labyrinth.</p>
         
         <div class="email-form">
-            <input type="email" placeholder="Enter your email for updates">
-            <button>Notify Me</button>
+            <form action="https://formspree.io/f/mdkaqjjy" method="POST">
+                <input type="email" name="email" placeholder="Enter your email for updates" required>
+                <button type="submit">Notify Me</button>
+            </form>
+            <div class="success-message" id="success-message">
+                Thanks! We'll keep you updated.
+            </div>
         </div>
     </div>
+
+    <script>
+        // Show success message after form submission
+        const form = document.querySelector('form');
+        const successMessage = document.getElementById('success-message');
+        
+        form.addEventListener('submit', function(e) {
+            // Form will still submit to Formspree
+            // This just shows a nice message
+            setTimeout(function() {
+                successMessage.style.display = 'block';
+                form.reset();
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
