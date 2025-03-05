@@ -16,25 +16,133 @@
         
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #0f0f1a;
+            background-color: #0a0a18;
             color: #ffffff;
             line-height: 1.6;
             overflow-x: hidden;
         }
         
-        .stars {
+        .space-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
+            overflow: hidden;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         
         .star {
             position: absolute;
             background-color: #ffffff;
             border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+            border-radius: 50%;
+            animation: shoot 8s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            20% {
+                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
+                opacity: 0;
+            }
+        }
+        
+        .moon {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #f5f5f5, #d9d9d9 30%, #bfbfbf 70%, #8c8c8c);
+            box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.4);
+            top: 10%;
+            right: 10%;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .moon::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #a0a0a0;
+            top: 30px;
+            left: 40px;
+        }
+        
+        .moon::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #a0a0a0;
+            top: 80px;
+            left: 90px;
+        }
+        
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite;
+        }
+        
+        .planet-1 {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #9c27b0, #6a0080);
+            bottom: 15%;
+            left: 10%;
+            animation-delay: -5s;
+        }
+        
+        .planet-2 {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #3f51b5, #303f9f);
+            top: 30%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
         
         .container {
@@ -47,6 +155,8 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
         
         .logo {
@@ -62,6 +172,7 @@
             background-clip: text;
             color: transparent;
             margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
         }
         
         .tagline {
@@ -125,6 +236,8 @@
         
         .social-link:hover {
             background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         footer {
@@ -146,6 +259,11 @@
             .countdown-number {
                 font-size: 2rem;
             }
+            
+            .moon {
+                width: 100px;
+                height: 100px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -156,11 +274,26 @@
             .countdown {
                 flex-wrap: wrap;
             }
+            
+            .moon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .planet-1, .planet-2 {
+                width: 30px;
+                height: 30px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
+    <div class="space-background">
+        <div class="stars" id="stars"></div>
+        <div class="moon"></div>
+        <div class="planet planet-1"></div>
+        <div class="planet planet-2"></div>
+    </div>
     
     <div class="container">
         <div class="logo">
@@ -208,7 +341,7 @@
         // Create stars
         function createStars() {
             const stars = document.getElementById('stars');
-            const count = 200;
+            const count = 500; // Increased star count
             
             for (let i = 0; i < count; i++) {
                 const star = document.createElement('div');
@@ -219,18 +352,41 @@
                 const y = Math.random() * window.innerHeight;
                 
                 // Random size
-                const size = Math.random() * 2;
+                const size = Math.random() * 3; // Slightly larger stars
                 
                 // Random opacity
-                const opacity = Math.random();
+                const opacity = Math.random() * 0.8 + 0.2;
+                
+                // Random animation delay
+                const delay = Math.random() * 5;
                 
                 star.style.left = `${x}px`;
                 star.style.top = `${y}px`;
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
                 star.style.opacity = opacity;
+                star.style.animationDelay = `${delay}s`;
                 
                 stars.appendChild(star);
+            }
+            
+            // Add shooting stars
+            for (let i = 0; i < 5; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                
+                // Random position
+                const x = Math.random() * window.innerWidth * 0.8;
+                const y = Math.random() * window.innerHeight * 0.8;
+                
+                // Random animation delay
+                const delay = Math.random() * 15;
+                
+                shootingStar.style.left = `${x}px`;
+                shootingStar.style.top = `${y}px`;
+                shootingStar.style.animationDelay = `${delay}s`;
+                
+                stars.appendChild(shootingStar);
             }
         }
         
