@@ -400,7 +400,7 @@
         </div>
         
         <footer>
-            &copy; 2023 Lunar Labyrinth. All rights reserved.
+            &copy; 2025 Lunar Labyrinth. All rights reserved.
         </footer>
     </div>
     
@@ -457,47 +457,57 @@
             }
         }
         
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            
-            // Start the countdown with fixed values
-            // The real countdown will start after this initial display
-            setTimeout(() => {
-                startRealCountdown();
-            }, 3000); // Wait 3 seconds before starting the real countdown
-        });
+        // Countdown timer variables
+        let days = 123;
+        let hours = 45;
+        let minutes = 67;
+        let seconds = 89;
         
-        // Start the real countdown
-        function startRealCountdown() {
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        }
-        
-        // Countdown timer
-        function updateCountdown() {
-            const launchDate = new Date('2023-12-31T00:00:00');
-            const now = new Date();
-            const diff = launchDate - now;
-            
-            if (diff <= 0) {
-                document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
-                document.getElementById('seconds').textContent = '0';
-                return;
-            }
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
+        // Update the countdown display
+        function updateCountdownDisplay() {
             document.getElementById('days').textContent = days;
             document.getElementById('hours').textContent = hours;
             document.getElementById('minutes').textContent = minutes;
             document.getElementById('seconds').textContent = seconds;
         }
+        
+        // Countdown timer function
+        function countdown() {
+            seconds--;
+            
+            if (seconds < 0) {
+                seconds = 59;
+                minutes--;
+                
+                if (minutes < 0) {
+                    minutes = 59;
+                    hours--;
+                    
+                    if (hours < 0) {
+                        hours = 23;
+                        days--;
+                        
+                        if (days < 0) {
+                            days = 0;
+                            hours = 0;
+                            minutes = 0;
+                            seconds = 0;
+                        }
+                    }
+                }
+            }
+            
+            updateCountdownDisplay();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            updateCountdownDisplay();
+            
+            // Start the countdown
+            setInterval(countdown, 1000);
+        });
     </script>
 </body>
 </html>
