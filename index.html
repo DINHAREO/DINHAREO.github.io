@@ -171,56 +171,130 @@
             z-index: 1;
         }
         
+        /* Updated Logo Styles */
         .logo {
             margin-bottom: 1rem;
             position: relative;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
         }
-        
+
         .logo h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 4.5rem;
             font-weight: 800;
             letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            transform-style: preserve-3d;
+            animation: titleFloat 6s ease-in-out infinite;
+        }
+
+        .char {
+            display: inline-block;
+            position: relative;
+            animation: charFloat 4s ease-in-out infinite;
+            transform-style: preserve-3d;
             background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 0.5rem;
             text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 20px rgba(78, 205, 196, 0.3), 0 0 30px rgba(69, 183, 209, 0.2);
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-            transform: perspective(1000px) rotateX(10deg) rotateY(10deg);
-            transition: transform 0.3s ease, text-shadow 0.3s ease;
-            animation: pulseGlow 3s infinite;
         }
 
-        .logo h1:hover {
-            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(20px);
-            text-shadow: 0 0 25px rgba(255, 107, 107, 0.7), 0 0 35px rgba(78, 205, 196, 0.5), 0 0 45px rgba(69, 183, 209, 0.4);
-        }
-
-        .logo h1::after {
-            content: '';
+        .logo .ripple-container {
             position: absolute;
-            bottom: -5px;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, transparent);
-            animation: glowLine 3s infinite;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
         }
 
-        @keyframes pulseGlow {
-            0% { text-shadow: 0 0 5px rgba(255, 107, 107, 0.3), 0 0 10px rgba(78, 205, 196, 0.2), 0 0 15px rgba(69, 183, 209, 0.1); }
-            50% { text-shadow: 0 0 15px rgba(255, 107, 107, 0.7), 0 0 25px rgba(78, 205, 196, 0.5), 0 0 35px rgba(69, 183, 209, 0.4); }
-            100% { text-shadow: 0 0 5px rgba(255, 107, 107, 0.3), 0 0 10px rgba(78, 205, 196, 0.2), 0 0 15px rgba(69, 183, 209, 0.1); }
+        .logo .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255, 107, 107, 0.1) 0%, 
+                rgba(78, 205, 196, 0.1) 33%, 
+                rgba(69, 183, 209, 0.1) 66%,
+                rgba(255, 107, 107, 0) 100%);
+            transform: translate(-50%, -50%);
+            animation: rippleEffect 4s linear infinite;
         }
 
-        @keyframes glowLine {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+        .logo .cosmic-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            filter: blur(20px);
+            opacity: 0.3;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            mix-blend-mode: screen;
+            animation: pulse 5s ease-in-out infinite;
+            z-index: -2;
+            border-radius: 50%;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0) rotateX(10deg) rotateY(10deg); }
+            50% { transform: translateY(-15px) rotateX(5deg) rotateY(15deg); }
+        }
+
+        @keyframes charFloat {
+            0%, 100% { transform: translateY(0) translateZ(0) rotateX(0deg); }
+            50% { transform: translateY(-10px) translateZ(20px) rotateX(5deg); }
+        }
+
+        @keyframes rippleEffect {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.7;
+            }
+            100% {
+                width: 500px;
+                height: 500px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.4; transform: scale(1.1); }
+        }
+
+        /* For the character shadows/layers */
+        .char::before,
+        .char::after {
+            content: attr(data-char);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: inherit;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .char::before {
+            transform: translateZ(-5px);
+            filter: blur(3px);
+            opacity: 0.7;
+        }
+
+        .char::after {
+            transform: translateZ(-10px);
+            filter: blur(6px);
+            opacity: 0.5;
         }
         
         .coming-soon {
@@ -444,8 +518,11 @@
     </div>
     
     <div class="container">
+        <!-- Updated Logo structure -->
         <div class="logo">
-            <h1>Lunar Labyrinth</h1>
+            <div class="cosmic-glow"></div>
+            <div class="ripple-container" id="rippleContainer"></div>
+            <h1 id="mainTitle">Lunar Labyrinth</h1>
         </div>
         
         <div class="coming-soon">Coming Soon</div>
@@ -589,10 +666,99 @@
             updateCountdownDisplay();
         }
         
+        // Process the main title for 3D character effect
+        function processMainTitle() {
+            const title = document.getElementById('mainTitle');
+            const text = title.textContent;
+            let html = '';
+            
+            // Split text into characters for 3D effect
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (char === ' ') {
+                    html += '<span style="display: inline-block; width: 0.5em;"></span>';
+                } else {
+                    html += `<span class="char" data-char="${char}" style="animation-delay: ${i * 0.1}s">${char}</span>`;
+                }
+            }
+            
+            title.innerHTML = html;
+            
+            // Add ripple effect
+            const rippleContainer = document.getElementById('rippleContainer');
+            
+            function createRipple() {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                
+                // Random position within the logo bounds
+                const logoRect = document.querySelector('.logo').getBoundingClientRect();
+                const x = logoRect.left + Math.random() * logoRect.width;
+                const y = logoRect.top + Math.random() * logoRect.height;
+                
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                rippleContainer.appendChild(ripple);
+                
+                // Remove the ripple after animation completes
+                setTimeout(() => {
+                    ripple.remove();
+                }, 4000);
+            }
+            
+            // Create initial ripples
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createRipple, i * 1000);
+            }
+            
+            // Continue creating ripples
+            setInterval(createRipple, 2000);
+            
+            // Interactive element - mouse move effect
+            document.addEventListener('mousemove', (e) => {
+                const logo = document.querySelector('.logo');
+                const rect = logo.getBoundingClientRect();
+                
+                // Only apply effect when near the logo
+                const distance = Math.sqrt(
+                    Math.pow(e.clientX - (rect.left + rect.width/2), 2) +
+                    Math.pow(e.clientY - (rect.top + rect.height/2), 2)
+                );
+                
+                // Apply effect if mouse is within reasonable distance
+                if (distance < rect.width) {
+                    const xAxis = (rect.left + rect.width/2 - e.clientX) / 25;
+                    const yAxis = (rect.top + rect.height/2 - e.clientY) / 25;
+                    
+                    title.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+                    
+                    // Create ripple on mousemove occasionally
+                    if (Math.random() > 0.95) {
+                        const ripple = document.createElement('div');
+                        ripple.classList.add('ripple');
+                        
+                        ripple.style.left = `${e.clientX}px`;
+                        ripple.style.top = `${e.clientY}px`;
+                        
+                        rippleContainer.appendChild(ripple);
+                        
+                        setTimeout(() => {
+                            ripple.remove();
+                        }, 4000);
+                    }
+                } else {
+                    // Reset transform when mouse is far away
+                    title.style.transform = '';
+                }
+            });
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             createStars();
             updateCountdownDisplay();
+            processMainTitle();
             
             // Start the countdown
             setInterval(countdown, 1000);
