@@ -6,7 +6,7 @@
     <title>Lunar Labyrinth - Coming Soon</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -160,19 +160,51 @@
         }
         
         .logo {
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
         }
         
         .logo h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #9c27b0, #3f51b5);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, #9c27b0, #3f51b5, #00bcd4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 10px rgba(156, 39, 176, 0.3);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(156, 39, 176, 0.5);
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9c27b0, #3f51b5, #00bcd4, transparent);
+        }
+        
+        .coming-soon {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #f5f5f5;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(156, 39, 176, 0.2);
         }
         
         .tagline {
@@ -192,9 +224,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 100px;
         }
         
         .countdown-number {
+            font-family: 'Orbitron', sans-serif;
             font-size: 3rem;
             font-weight: 700;
             color: #ffffff;
@@ -204,6 +242,7 @@
             font-size: 1rem;
             color: #b8b8d4;
             text-transform: uppercase;
+            letter-spacing: 2px;
         }
         
         .description {
@@ -211,6 +250,7 @@
             margin-bottom: 3rem;
             font-size: 1.2rem;
             color: #d1d1e0;
+            line-height: 1.8;
         }
         
         .social-links {
@@ -249,15 +289,25 @@
         
         @media (max-width: 768px) {
             .logo h1 {
-                font-size: 3rem;
+                font-size: 3.5rem;
+            }
+            
+            .coming-soon {
+                font-size: 1.4rem;
+                letter-spacing: 5px;
             }
             
             .countdown {
                 gap: 1rem;
             }
             
+            .countdown-item {
+                min-width: 80px;
+                padding: 0.8rem 1rem;
+            }
+            
             .countdown-number {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .moon {
@@ -271,8 +321,23 @@
                 font-size: 2.5rem;
             }
             
+            .coming-soon {
+                font-size: 1.2rem;
+                letter-spacing: 3px;
+            }
+            
             .countdown {
                 flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            
+            .countdown-item {
+                min-width: 70px;
+                padding: 0.6rem 0.8rem;
+            }
+            
+            .countdown-number {
+                font-size: 1.8rem;
             }
             
             .moon {
@@ -297,26 +362,28 @@
     
     <div class="container">
         <div class="logo">
-            <h1>LUNAR LABYRINTH</h1>
+            <h1>Lunar Labyrinth</h1>
         </div>
+        
+        <div class="coming-soon">Coming Soon</div>
         
         <p class="tagline">Discover the mysteries of the Lunar Labyrinth</p>
         
         <div class="countdown">
             <div class="countdown-item">
-                <span class="countdown-number" id="days">--</span>
+                <span class="countdown-number" id="days">123</span>
                 <span class="countdown-label">Days</span>
             </div>
             <div class="countdown-item">
-                <span class="countdown-number" id="hours">--</span>
+                <span class="countdown-number" id="hours">45</span>
                 <span class="countdown-label">Hours</span>
             </div>
             <div class="countdown-item">
-                <span class="countdown-number" id="minutes">--</span>
+                <span class="countdown-number" id="minutes">67</span>
                 <span class="countdown-label">Minutes</span>
             </div>
             <div class="countdown-item">
-                <span class="countdown-number" id="seconds">--</span>
+                <span class="countdown-number" id="seconds">89</span>
                 <span class="countdown-label">Seconds</span>
             </div>
         </div>
@@ -390,6 +457,23 @@
             }
         }
         
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            
+            // Start the countdown with fixed values
+            // The real countdown will start after this initial display
+            setTimeout(() => {
+                startRealCountdown();
+            }, 3000); // Wait 3 seconds before starting the real countdown
+        });
+        
+        // Start the real countdown
+        function startRealCountdown() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+        
         // Countdown timer
         function updateCountdown() {
             const launchDate = new Date('2023-12-31T00:00:00');
@@ -414,13 +498,6 @@
             document.getElementById('minutes').textContent = minutes;
             document.getElementById('seconds').textContent = seconds;
         }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        });
     </script>
 </body>
 </html>
