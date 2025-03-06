@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lunar Labyrinth - Coming Soon</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,12 +14,62 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --color-primary: #ff6b6b;
+            --color-secondary: #4ecdc4;
+            --color-tertiary: #45b7d1;
+            --color-bg-dark: #0a0a18;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --primary-glow: rgba(255, 107, 107, 0.5);
+            --secondary-glow: rgba(78, 205, 196, 0.3);
+            --tertiary-glow: rgba(69, 183, 209, 0.2);
+            
+            /* Responsive font sizes */
+            --fs-title-1: clamp(2.5rem, 7vw, 5rem);
+            --fs-title-2: clamp(3rem, 8vw, 5.5rem);
+            --fs-coming-soon: clamp(1rem, 3vw, 1.8rem);
+            --fs-tagline: clamp(1.1rem, 2.5vw, 1.5rem);
+            --fs-countdown-number: clamp(1.8rem, 5vw, 3rem);
+            --fs-countdown-label: clamp(0.7rem, 1.5vw, 1rem);
+            --fs-description: clamp(1rem, 2vw, 1.2rem);
+            
+            /* Spacing variables */
+            --spacing-sm: clamp(0.5rem, 1vw, 1rem);
+            --spacing-md: clamp(1rem, 3vw, 2rem);
+            --spacing-lg: clamp(1.5rem, 5vw, 3rem);
+            
+            /* Size adjustments */
+            --countdown-item-width: clamp(60px, 20vw, 100px);
+            --countdown-padding: clamp(0.5rem, 1vw, 1.5rem);
+            --container-padding: clamp(10px, 3vw, 20px);
+            --title-letter-spacing: clamp(2px, 1vw, 6px);
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #0a0a18;
+            font-family: var(--font-body);
+            background-color: var(--color-bg-dark);
             color: #ffffff;
             line-height: 1.6;
-            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Ensure the page content doesn't get too stretched on wide screens */
+        .page-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            max-width: 100vw;
         }
         
         .space-background {
@@ -95,7 +145,10 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
+            background: linear-gradient(45deg, 
+                rgba(255, 107, 107, 0.1), 
+                rgba(78, 205, 196, 0.1), 
+                rgba(69, 183, 209, 0.1));
             animation: floatClouds 30s ease-in-out infinite;
             opacity: 0.5;
         }
@@ -114,8 +167,8 @@
         }
         
         .planet-1 {
-            width: 80px;
-            height: 80px;
+            width: min(80px, 15vw);
+            height: min(80px, 15vw);
             background: radial-gradient(circle at 30% 30%, #9c27b0, #6a0080);
             bottom: 15%;
             left: 10%;
@@ -123,8 +176,8 @@
         }
         
         .planet-2 {
-            width: 60px;
-            height: 60px;
+            width: min(60px, 12vw);
+            height: min(60px, 12vw);
             background: radial-gradient(circle at 30% 30%, #3f51b5, #303f9f);
             top: 30%;
             left: 5%;
@@ -133,7 +186,7 @@
         
         @keyframes orbit {
             0% { transform: translateX(0) rotate(0deg); }
-            50% { transform: translateX(50px) rotate(180deg); }
+            50% { transform: translateX(min(50px, 10vw)) rotate(180deg); }
             100% { transform: translateX(0) rotate(360deg); }
         }
         
@@ -159,8 +212,9 @@
         
         .container {
             max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: var(--container-padding);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -169,14 +223,15 @@
             text-align: center;
             position: relative;
             z-index: 1;
+            overflow-y: auto;
         }
         
         /* Updated Logo Styles */
         .logo {
-            margin-bottom: 3rem;
+            margin-bottom: var(--spacing-lg);
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: min(800px, 90vw);
             text-align: center;
             perspective: 1000px;
         }
@@ -189,31 +244,31 @@
         
         .logo-word {
             margin: 0;
-            font-family: 'Orbitron', sans-serif;
+            font-family: var(--font-heading);
             font-weight: 900;
             line-height: 0.9;
-            letter-spacing: 6px;
+            letter-spacing: var(--title-letter-spacing);
             position: relative;
             display: block;
             text-align: center;
         }
         
         .logo-word-1 {
-            font-size: 5rem;
+            font-size: var(--fs-title-1);
             margin-bottom: 0.2em;
         }
         
         .logo-word-2 {
-            font-size: 5.5rem;
+            font-size: var(--fs-title-2);
         }
         
         .logo-text {
             background-image: linear-gradient(
                 90deg, 
-                #ff6b6b, 
-                #4ecdc4, 
-                #45b7d1, 
-                #ff6b6b
+                var(--color-primary), 
+                var(--color-secondary), 
+                var(--color-tertiary), 
+                var(--color-primary)
             );
             background-size: 300% 100%;
             -webkit-background-clip: text;
@@ -222,9 +277,9 @@
             animation: gradientFlow 8s ease infinite;
             position: relative;
             text-shadow: 
-                0 0 15px rgba(255, 107, 107, 0.5),
-                0 0 20px rgba(78, 205, 196, 0.3),
-                0 0 30px rgba(69, 183, 209, 0.2);
+                0 0 15px var(--primary-glow),
+                0 0 20px var(--secondary-glow),
+                0 0 30px var(--tertiary-glow);
         }
         
         @keyframes gradientFlow {
@@ -330,7 +385,12 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, transparent);
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--color-primary), 
+                var(--color-secondary), 
+                var(--color-tertiary), 
+                transparent);
             animation: glowLine 3s infinite;
         }
         
@@ -341,21 +401,26 @@
         }
         
         .coming-soon {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
+            font-family: var(--font-heading);
+            font-size: var(--fs-coming-soon);
             font-weight: 500;
             color: #ffffff;
             text-transform: uppercase;
-            letter-spacing: 8px;
-            margin-bottom: 2rem;
+            letter-spacing: min(8px, 1.5vw);
+            margin-bottom: var(--spacing-md);
             position: relative;
             display: inline-block;
-            padding: 0.5rem 1.5rem;
+            padding: var(--spacing-sm) var(--spacing-md);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 5px;
-            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
+            background: linear-gradient(45deg, 
+                rgba(255, 107, 107, 0.1), 
+                rgba(78, 205, 196, 0.1), 
+                rgba(69, 183, 209, 0.1));
             box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3), 0 0 15px rgba(78, 205, 196, 0.2), 0 0 20px rgba(69, 183, 209, 0.1);
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3), 
+                         0 0 15px rgba(78, 205, 196, 0.2), 
+                         0 0 20px rgba(69, 183, 209, 0.1);
             transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -363,13 +428,15 @@
         .coming-soon:hover {
             transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(15px);
             box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
-            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 25px rgba(78, 205, 196, 0.4), 0 0 30px rgba(69, 183, 209, 0.3);
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 
+                         0 0 25px rgba(78, 205, 196, 0.4), 
+                         0 0 30px rgba(69, 183, 209, 0.3);
         }
         
         .tagline {
-            font-size: 1.5rem;
+            font-size: var(--fs-tagline);
             color: #b8b8d4;
-            margin-bottom: 3rem;
+            margin-bottom: var(--spacing-lg);
             text-shadow: 0 0 5px rgba(78, 205, 196, 0.2), 0 0 10px rgba(69, 183, 209, 0.1);
             transform: perspective(1000px) rotateX(5deg);
             transition: transform 0.3s ease, text-shadow 0.3s ease;
@@ -383,23 +450,31 @@
         .countdown {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            width: 100%;
+            max-width: min(600px, 90vw);
         }
         
         .countdown-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             background-color: rgba(0, 0, 0, 0.3);
-            padding: 1rem 1.5rem;
+            padding: var(--countdown-padding);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            min-width: 100px;
+            min-width: var(--countdown-item-width);
             transform: perspective(1000px) rotateY(10deg);
             transition: transform 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(45deg, rgba(255, 107, 107, 0.05), rgba(78, 205, 196, 0.05), rgba(69, 183, 209, 0.05));
+            background: linear-gradient(45deg, 
+                rgba(255, 107, 107, 0.05), 
+                rgba(78, 205, 196, 0.05), 
+                rgba(69, 183, 209, 0.05));
+            flex: 0 1 auto;
         }
         
         .countdown-item:hover {
@@ -408,60 +483,71 @@
         }
         
         .countdown-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
+            font-family: var(--font-heading);
+            font-size: var(--fs-countdown-number);
             font-weight: 700;
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 0 0 15px rgba(255, 107, 107, 0.2), 0 0 20px rgba(78, 205, 196, 0.1);
+            text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 
+                         0 0 15px rgba(255, 107, 107, 0.2), 
+                         0 0 20px rgba(78, 205, 196, 0.1);
             transform: perspective(1000px) rotateX(5deg);
             transition: transform 0.3s ease, text-shadow 0.3s ease;
         }
 
         .countdown-number:hover {
             transform: perspective(1000px) rotateX(0deg) translateZ(15px);
-            text-shadow: 0 0 15px rgba(69, 183, 209, 0.5), 0 0 25px rgba(255, 107, 107, 0.4), 0 0 30px rgba(78, 205, 196, 0.3);
+            text-shadow: 0 0 15px rgba(69, 183, 209, 0.5), 
+                         0 0 25px rgba(255, 107, 107, 0.4), 
+                         0 0 30px rgba(78, 205, 196, 0.3);
         }
         
         .countdown-label {
-            font-size: 1rem;
+            font-size: var(--fs-countdown-label);
             color: #b8b8d4;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1), 0 0 10px rgba(69, 183, 209, 0.05);
+            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1), 
+                         0 0 10px rgba(69, 183, 209, 0.05);
             transform: perspective(1000px) rotateX(5deg);
             transition: transform 0.3s ease, text-shadow 0.3s ease;
         }
 
         .countdown-label:hover {
             transform: perspective(1000px) rotateX(0deg) translateZ(10px);
-            text-shadow: 0 0 10px rgba(78, 205, 196, 0.3), 0 0 15px rgba(69, 183, 209, 0.2);
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.3), 
+                         0 0 15px rgba(69, 183, 209, 0.2);
         }
         
         .description {
-            max-width: 600px;
-            margin-bottom: 3rem;
-            font-size: 1.2rem;
+            max-width: min(600px, 90vw);
+            margin-bottom: var(--spacing-lg);
+            font-size: var(--fs-description);
             color: #d1d1e0;
             line-height: 1.8;
-            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1), 0 0 10px rgba(69, 183, 209, 0.05);
+            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1), 
+                         0 0 10px rgba(69, 183, 209, 0.05);
             transform: perspective(1000px) rotateX(5deg);
             transition: transform 0.3s ease, text-shadow 0.3s ease;
+            padding: 0 var(--spacing-sm);
         }
 
         .description:hover {
             transform: perspective(1000px) rotateX(0deg) translateZ(10px);
-            text-shadow: 0 0 10px rgba(78, 205, 196, 0.3), 0 0 15px rgba(69, 183, 209, 0.2);
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.3), 
+                         0 0 15px rgba(69, 183, 209, 0.2);
         }
         
         .social-links {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 2rem;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         .social-link {
-            width: 50px;
-            height: 50px;
+            width: min(50px, 12vw);
+            height: min(50px, 12vw);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -470,167 +556,209 @@
             transition: all 0.3s ease;
             text-decoration: none;
             color: white;
-            font-size: 28px;
+            font-size: clamp(20px, 6vw, 28px);
             font-weight: bold;
             transform: perspective(1000px) rotateY(10deg);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3), 0 0 15px rgba(78, 205, 196, 0.2), 0 0 20px rgba(69, 183, 209, 0.1);
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3), 
+                         0 0 15px rgba(78, 205, 196, 0.2), 
+                         0 0 20px rgba(69, 183, 209, 0.1);
         }
         
         .social-link:hover {
             background-color: rgba(255, 255, 255, 0.2);
             transform: perspective(1000px) rotateY(0deg) translateZ(20px);
             box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
-            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 25px rgba(78, 205, 196, 0.4), 0 0 30px rgba(69, 183, 209, 0.3);
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 
+                         0 0 25px rgba(78, 205, 196, 0.4), 
+                         0 0 30px rgba(69, 183, 209, 0.3);
         }
         
         footer {
             margin-top: auto;
-            padding: 20px 0;
+            padding: var(--spacing-md) 0;
             color: #b8b8d4;
-            font-size: 0.9rem;
-            text-shadow: 0 0 5px rgba(69, 183, 209, 0.1), 0 0 10px rgba(78, 205, 196, 0.05);
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            text-shadow: 0 0 5px rgba(69, 183, 209, 0.1), 
+                         0 0 10px rgba(78, 205, 196, 0.05);
             transform: perspective(1000px) rotateX(5deg);
             transition: transform 0.3s ease, text-shadow 0.3s ease;
+            width: 100%;
+            text-align: center;
         }
 
         footer:hover {
             transform: perspective(1000px) rotateX(0deg) translateZ(10px);
-            text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 0 0 15px rgba(78, 205, 196, 0.2);
+            text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 
+                         0 0 15px rgba(78, 205, 196, 0.2);
         }
         
-        @media (max-width: 768px) {
-            .logo-word-1 {
-                font-size: 3.5rem;
+        /* Extra small devices adjustment */
+        @media (max-height: 600px) {
+            .container {
+                padding-top: var(--spacing-md);
+                padding-bottom: var(--spacing-md);
+                justify-content: flex-start;
             }
             
-            .logo-word-2 {
-                font-size: 4rem;
+            .logo {
+                margin-top: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
             }
             
             .coming-soon {
-                font-size: 1.4rem;
-                letter-spacing: 5px;
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .tagline {
+                margin-bottom: var(--spacing-md);
             }
             
             .countdown {
-                gap: 1rem;
+                margin-bottom: var(--spacing-md);
             }
             
-            .countdown-item {
-                min-width: 80px;
-                padding: 0.8rem 1rem;
-            }
-            
-            .countdown-number {
-                font-size: 2.2rem;
+            .description {
+                margin-bottom: var(--spacing-md);
             }
         }
         
-        @media (max-width: 480px) {
-            .logo-word-1 {
-                font-size: 2.8rem;
+        /* Optimize for touch devices */
+        @media (hover: none) {
+            .logo-inner,
+            .coming-soon,
+            .tagline,
+            .countdown-item,
+            .countdown-number,
+            .countdown-label,
+            .description,
+            .social-link,
+            footer {
+                transform: none !important;
+                transition: none;
             }
             
-            .logo-word-2 {
-                font-size: 3.2rem;
+            .coming-soon:hover,
+            .tagline:hover,
+            .countdown-item:hover,
+            .countdown-number:hover,
+            .countdown-label:hover,
+            .description:hover,
+            .social-link:hover,
+            footer:hover {
+                transform: none !important;
+            }
+        }
+        
+        /* Handle landscape orientation on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding: var(--spacing-sm);
+                min-height: auto;
+            }
+            
+            .logo {
+                margin-bottom: var(--spacing-sm);
             }
             
             .coming-soon {
-                font-size: 1.2rem;
-                letter-spacing: 3px;
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .tagline {
+                margin-bottom: var(--spacing-sm);
             }
             
             .countdown {
-                flex-wrap: wrap;
-                gap: 0.8rem;
+                margin-bottom: var(--spacing-sm);
             }
             
-            .countdown-item {
-                min-width: 70px;
-                padding: 0.6rem 0.8rem;
-            }
-            
-            .countdown-number {
-                font-size: 1.8rem;
+            .description {
+                margin-bottom: var(--spacing-sm);
             }
         }
     </style>
 </head>
 <body>
-    <div class="space-background">
-        <div class="cosmic-elements">
-            <div class="stars" id="stars"></div>
-            <div class="cosmic-clouds"></div>
-            <div class="planet planet-1"></div>
-            <div class="planet planet-2"></div>
-            <div class="hero-artwork"></div>
+    <div class="page-container">
+        <div class="space-background">
+            <div class="cosmic-elements">
+                <div class="stars" id="stars"></div>
+                <div class="cosmic-clouds"></div>
+                <div class="planet planet-1"></div>
+                <div class="planet planet-2"></div>
+                <div class="hero-artwork"></div>
+            </div>
         </div>
-    </div>
-    
-    <div class="container">
-        <!-- Updated Logo structure with stacked text -->
-        <div class="logo">
-            <div class="logo-inner" id="logoInner">
-                <div class="logo-word logo-word-1">
-                    <span class="logo-text">LUNAR</span>
+        
+        <div class="container">
+            <!-- Updated Logo structure with stacked text -->
+            <div class="logo">
+                <div class="logo-inner" id="logoInner">
+                    <div class="logo-word logo-word-1">
+                        <span class="logo-text">LUNAR</span>
+                    </div>
+                    <div class="logo-word logo-word-2">
+                        <span class="logo-text">LABYRINTH</span>
+                    </div>
+                    <div class="logo-3d-effect">
+                        <div class="logo-3d-face"></div>
+                        <div class="logo-depth"></div>
+                    </div>
+                    <div class="logo-reflection"></div>
+                    <div class="logo-shine"></div>
                 </div>
-                <div class="logo-word logo-word-2">
-                    <span class="logo-text">LABYRINTH</span>
+            </div>
+            
+            <div class="coming-soon">Coming Soon</div>
+            
+            <p class="tagline">Discover the mysteries of the Lunar Labyrinth</p>
+            
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">123</span>
+                    <span class="countdown-label">Days</span>
                 </div>
-                <div class="logo-3d-effect">
-                    <div class="logo-3d-face"></div>
-                    <div class="logo-depth"></div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">45</span>
+                    <span class="countdown-label">Hours</span>
                 </div>
-                <div class="logo-reflection"></div>
-                <div class="logo-shine"></div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">67</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">89</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
             </div>
+            
+            <p class="description">
+                An exclusive NFT collection with interactive puzzles and holder-only communication.
+                Join us on a journey through the Lunar Labyrinth.
+            </p>
+            
+            <div class="social-links">
+                <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">
+                    𝕏
+                </a>
+            </div>
+            
+            <footer>
+                © 2025 Lunar Labyrinth. All rights reserved.
+            </footer>
         </div>
-        
-        <div class="coming-soon">Coming Soon</div>
-        
-        <p class="tagline">Discover the mysteries of the Lunar Labyrinth</p>
-        
-        <div class="countdown">
-            <div class="countdown-item">
-                <span class="countdown-number" id="days">123</span>
-                <span class="countdown-label">Days</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="hours">45</span>
-                <span class="countdown-label">Hours</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="minutes">67</span>
-                <span class="countdown-label">Minutes</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="seconds">89</span>
-                <span class="countdown-label">Seconds</span>
-            </div>
-        </div>
-        
-        <p class="description">
-            An exclusive NFT collection with interactive puzzles and holder-only communication.
-            Join us on a journey through the Lunar Labyrinth.
-        </p>
-        
-        <div class="social-links">
-            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">
-                𝕏
-            </a>
-        </div>
-        
-        <footer>
-            © 2025 Lunar Labyrinth. All rights reserved.
-        </footer>
     </div>
     
     <script>
-        // Create stars
+        // Create stars with responsive sizing
         function createStars() {
             const stars = document.getElementById('stars');
-            const count = 500; // Increased star count
+            // Clear existing stars first (important for resize events)
+            stars.innerHTML = '';
+            
+            // Adjust star count based on screen size
+            const count = window.innerWidth < 768 ? 300 : 500;
             
             for (let i = 0; i < count; i++) {
                 const star = document.createElement('div');
@@ -640,131 +768,5 @@
                 const x = Math.random() * window.innerWidth;
                 const y = Math.random() * window.innerHeight;
                 
-                // Random size and color
-                const size = Math.random() * 3;
-                const colors = ['#ffffff', '#ff6b6b', '#4ecdc4', '#45b7d1'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Random opacity and animation delay
-                const opacity = Math.random() * 0.8 + 0.2;
-                const delay = Math.random() * 5;
-                
-                star.style.left = `${x}px`;
-                star.style.top = `${y}px`;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.backgroundColor = color;
-                star.style.opacity = opacity;
-                star.style.animationDelay = `${delay}s`;
-                
-                stars.appendChild(star);
-            }
-            
-            // Add shooting stars with colorful trails
-            for (let i = 0; i < 5; i++) {
-                const shootingStar = document.createElement('div');
-                shootingStar.className = 'shooting-star';
-                
-                // Random position
-                const x = Math.random() * window.innerWidth * 0.8;
-                const y = Math.random() * window.innerHeight * 0.8;
-                
-                // Random trail color
-                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Random animation delay
-                const delay = Math.random() * 15;
-                
-                shootingStar.style.left = `${x}px`;
-                shootingStar.style.top = `${y}px`;
-                shootingStar.style.background = `linear-gradient(to right, rgba(0,0,0,0), ${color})`;
-                shootingStar.style.animationDelay = `${delay}s`;
-                
-                stars.appendChild(shootingStar);
-            }
-        }
-        
-        // Countdown timer variables
-        let days = 123;
-        let hours = 45;
-        let minutes = 67;
-        let seconds = 89;
-        
-        // Update the countdown display
-        function updateCountdownDisplay() {
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
-        }
-        
-        // Countdown timer function
-        function countdown() {
-            seconds--;
-            
-            if (seconds < 0) {
-                seconds = 59;
-                minutes--;
-                
-                if (minutes < 0) {
-                    minutes = 59;
-                    hours--;
-                    
-                    if (hours < 0) {
-                        hours = 23;
-                        days--;
-                        
-                        if (days < 0) {
-                            days = 0;
-                            hours = 0;
-                            minutes = 0;
-                            seconds = 0;
-                        }
-                    }
-                }
-            }
-            
-            updateCountdownDisplay();
-        }
-        
-        // 3D effect for title
-        function initTitle3dEffect() {
-            const logoInner = document.getElementById('logoInner');
-            
-            // Handle mouse movement over logo
-            document.addEventListener('mousemove', (e) => {
-                const logo = document.querySelector('.logo');
-                const rect = logo.getBoundingClientRect();
-                
-                // Calculate distance from center
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const distanceX = (e.clientX - centerX) / (window.innerWidth / 2);
-                const distanceY = (e.clientY - centerY) / (window.innerHeight / 2);
-                
-                // Apply tilt effect when mouse is near
-                const distance = Math.sqrt(
-                    Math.pow(e.clientX - centerX, 2) + 
-                    Math.pow(e.clientY - centerY, 2)
-                );
-                
-                if (distance < rect.width * 1.5) {
-                    const tiltX = distanceY * 10; // Tilt on X axis (vertical motion)
-                    const tiltY = -distanceX * 10; // Tilt on Y axis (horizontal motion)
-                    const elevate = 10 - (distance / (rect.width * 0.75)) * 10;
-                    
-                    logoInner.style.transform = `
-                        perspective(1000px)
-                        rotateX(${tiltX}deg)
-                        rotateY(${tiltY}deg)
-                        translateZ(${Math.max(0, elevate)}px)
-                    `;
-                } else {
-                    // Reset when far away
-                    logoInner.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
-                }
-            });
-            
-            // Reset on mouse leave
-            document.addEventListener('mousele
+                // Random size and color - adjust for smaller screens
+                const maxSize = window.innerWidth < 768
