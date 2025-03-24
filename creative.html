@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lunar Labyrinth - Get Creative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Reuse the same background and cosmic styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-x: hidden; position: relative; margin: 0; padding: 0; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0a18;
+            color: #ffffff;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a18, #2d0047, #4a0072);
+        }
+        .cosmic-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+            border-radius: 50%;
+            animation: shoot 8s linear infinite;
+            opacity: 0;
+        }
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0); opacity: 0; }
+            5% { opacity: 1; }
+            20% { transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2)); opacity: 0; }
+            100% { transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2)); opacity: 0; }
+        }
+        .cosmic-clouds {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
+            animation: floatClouds 30s ease-in-out infinite;
+            opacity: 0.5;
+        }
+        @keyframes floatClouds {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: orbit 20s linear infinite;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .planet-1 {
+            width: min(80px, 15vw);
+            height: min(80px, 15vw);
+            background: radial-gradient(circle at 30% 30%, #9c27b0, #6a0080);
+            bottom: 15%;
+            left: 10%;
+            animation-delay: -5s;
+        }
+        .planet-2 {
+            width: min(60px, 12vw);
+            height: min(60px, 12vw);
+            background: radial-gradient(circle at 30% 30%, #3f51b5, #303f9f);
+            top: 30%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+        @keyframes orbit {
+            0% { transform: translateX(0) rotate(0deg); }
+            50% { transform: translateX(min(50px, 5vw)) rotate(180deg); }
+            100% { transform: translateX(0) rotate(360deg); }
+        }
+        .hero-artwork {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: url('Untitled513_20250304094118.jpeg') no-repeat center center;
+            background-size: cover;
+            opacity: 0.35;
+            z-index: -2;
+            filter: blur(3px);
+            animation: fadeIn 10s infinite;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0.25; }
+            50% { opacity: 0.35; }
+            100% { opacity: 0.25; }
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            overflow-x: hidden;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            background-image: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #ff6b6b);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientFlow 8s ease infinite;
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 20px rgba(78, 205, 196, 0.3);
+            margin-bottom: clamp(1.5rem, 4vh, 3rem);
+        }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #d1d1e0;
+            max-width: min(600px, 95vw);
+            margin-bottom: clamp(1.5rem, 4vh, 3rem);
+            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1);
+        }
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: clamp(1rem, 3vh, 2rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .social-link {
+            width: min(50px, 12vw);
+            height: min(50px, 12vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            font-size: clamp(20px, 6vw, 28px);
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .social-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+        .creative-button {
+            width: auto;
+            padding: clamp(0.5rem, 1vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 25px;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            color: #0a0a18;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        .creative-button:hover {
+            background: linear-gradient(45deg, #45b7d1, #4ecdc4, #ff6b6b);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.5);
+            color: #ffffff;
+        }
+        footer {
+            margin-top: auto;
+            padding: clamp(1rem, 3vh, 20px) 0;
+            color: #b8b8d4;
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            text-shadow: 0 0 5px rgba(69, 183, 209, 0.1);
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="space-background">
+        <div class="cosmic-elements">
+            <div class="星星" id="stars"></div>
+            <div class="cosmic-clouds"></div>
+            <div class="planet planet-1"></div>
+            <div class="planet planet-2"></div>
+            <div class="hero-artwork"></div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Get Creative</h1>
+        <p>
+            Unleash your imagination in the Lunar Labyrinth. This space is yours to explore, create, and share your own cosmic mysteries.
+        </p>
+        <div class="social-links">
+            <a href="index.html" class="creative-button">Back to Home</a>
+            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">𝕏</a>
+        </div>
+        <footer>
+            © 2025 Lunar Labyrinth. All rights reserved.
+        </footer>
+    </div>
+    <script>
+        // Reuse the star creation script
+        function createStars() {
+            const stars = document.getElementById('stars');
+            stars.innerHTML = '';
+            const count = window.innerWidth < 768 ? 300 : 500;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                const maxSize = window.innerWidth < 768 ? 2 : 3;
+                const size = Math.random() * maxSize;
+                const colors = ['#ffffff', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const opacity = Math.random() * 0.8 + 0.2;
+                const delay = Math.random() * 5;
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.backgroundColor = color;
+                star.style.opacity = opacity;
+                star.style.animationDelay = `${delay}s`;
+                stars.appendChild(star);
+            }
+            const shootingStarCount = window.innerWidth < 768 ? 3 : 5;
+            for (let i = 0; i < shootingStarCount; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                const x = Math.random() * window.innerWidth * 0.8;
+                const y = Math.random() * window.innerHeight * 0.8;
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const delay = Math.random() * 15;
+                shootingStar.style.left = `${x}px`;
+                shootingStar.style.top = `${y}px`;
+                shootingStar.style.background = `linear-gradient(to right, rgba(0,0,0,0), ${color})`;
+                shootingStar.style.animationDelay = `${delay}s`;
+                stars.appendChild(shootingStar);
+            }
+        }
+        window.onload = createStars;
+        window.onresize = createStars;
+    </script>
+</body>
+</html>
