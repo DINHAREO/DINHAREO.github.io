@@ -14,7 +14,6 @@
             box-sizing: border-box;
         }
         
-        /* This is critical to prevent horizontal overflow and scrolling */
         html, body {
             width: 100%;
             height: 100%;
@@ -35,7 +34,6 @@
             overflow-y: auto;
         }
         
-        /* This is the main background that shows the gradient */
         .space-background {
             position: fixed;
             top: 0;
@@ -158,7 +156,6 @@
             100% { transform: translateX(0) rotate(360deg); }
         }
         
-        /* Hero artwork is the background image */
         .hero-artwork {
             position: absolute;
             top: 0;
@@ -193,11 +190,9 @@
             text-align: center;
             position: relative;
             z-index: 1;
-            /* Prevent horizontal overflow */
             overflow-x: hidden;
         }
         
-        /* Logo Styles */
         .logo {
             margin-bottom: clamp(1.5rem, 5vh, 3rem);
             position: relative;
@@ -482,7 +477,6 @@
             transform: perspective(1000px) rotateX(5deg);
             transition: transform 0.3s ease, text-shadow 0.3s ease;
             padding: 0 clamp(0.5rem, 1vw, 1rem);
-            /* Prevent text from causing horizontal overflow */
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
@@ -525,6 +519,32 @@
             text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 25px rgba(78, 205, 196, 0.4), 0 0 30px rgba(69, 183, 209, 0.3);
         }
         
+        .creative-button {
+            width: auto;
+            padding: clamp(0.5rem, 1vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 25px;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            color: #0a0a18;
+            text-shadow: none;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .creative-button:hover {
+            background: linear-gradient(45deg, #45b7d1, #4ecdc4, #ff6b6b);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.5);
+            color: #ffffff;
+            transform: perspective(1000px) rotateY(0deg) translateZ(20px);
+        }
+        
         footer {
             margin-top: auto;
             padding: clamp(1rem, 3vh, 20px) 0;
@@ -542,7 +562,6 @@
             text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 0 0 15px rgba(78, 205, 196, 0.2);
         }
         
-        /* Optimize for touch devices */
         @media (hover: none) {
             .logo-inner,
             .coming-soon,
@@ -552,6 +571,7 @@
             .countdown-label,
             .description,
             .social-link,
+            .creative-button,
             footer {
                 transform: none !important;
                 transition: none;
@@ -564,12 +584,12 @@
             .countdown-label:hover,
             .description:hover,
             .social-link:hover,
+            .creative-button:hover,
             footer:hover {
                 transform: none !important;
             }
         }
         
-        /* Handle landscape orientation on mobile */
         @media (max-height: 500px) and (orientation: landscape) {
             .container {
                 padding: 10px;
@@ -603,7 +623,6 @@
     </div>
     
     <div class="container">
-        <!-- Updated Logo structure with stacked text -->
         <div class="logo">
             <div class="logo-inner" id="logoInner">
                 <div class="logo-word logo-word-1">
@@ -652,6 +671,7 @@ Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experie
         </p>
         
         <div class="social-links">
+            <a href="creative.html" class="creative-button">Get Creative</a>
             <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">
                 𝕏
             </a>
@@ -663,29 +683,24 @@ Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experie
     </div>
     
     <script>
-        // Create stars based on screen size
         function createStars() {
             const stars = document.getElementById('stars');
-            stars.innerHTML = ''; // Clear any existing stars
+            stars.innerHTML = '';
             
-            // Adjust star count based on screen size
             const count = window.innerWidth < 768 ? 300 : 500;
             
             for (let i = 0; i < count; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 
-                // Random position
                 const x = Math.random() * window.innerWidth;
                 const y = Math.random() * window.innerHeight;
                 
-                // Random size and color - adjust for smaller screens
                 const maxSize = window.innerWidth < 768 ? 2 : 3;
                 const size = Math.random() * maxSize;
                 const colors = ['#ffffff', '#ff6b6b', '#4ecdc4', '#45b7d1'];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 
-                // Random opacity and animation delay
                 const opacity = Math.random() * 0.8 + 0.2;
                 const delay = Math.random() * 5;
                 
@@ -700,21 +715,17 @@ Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experie
                 stars.appendChild(star);
             }
             
-            // Add shooting stars, fewer on mobile
             const shootingStarCount = window.innerWidth < 768 ? 3 : 5;
             for (let i = 0; i < shootingStarCount; i++) {
                 const shootingStar = document.createElement('div');
                 shootingStar.className = 'shooting-star';
                 
-                // Random position
                 const x = Math.random() * window.innerWidth * 0.8;
                 const y = Math.random() * window.innerHeight * 0.8;
                 
-                // Random trail color
                 const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 
-                // Random animation delay
                 const delay = Math.random() * 15;
                 
                 shootingStar.style.left = `${x}px`;
@@ -726,4 +737,8 @@ Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experie
             }
         }
         
-        // Set the launch date - Using September the 30th,
+        window.onload = createStars;
+        window.onresize = createStars;
+    </script>
+</body>
+</html>
