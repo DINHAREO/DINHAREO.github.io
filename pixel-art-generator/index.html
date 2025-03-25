@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Art Generator - Lunar Labyrinth</title>
+<style>
+:root {
+--primary: #6b46c1;
+--secondary: #4c1d95;
+--accent: #f472b6;
+--bg: #1f2937;
+--text: #f9fafb;
+--panel: #374151;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+margin: 0;
+padding: 0;
+background-color: var(--bg);
+color: var(--text);
+display: flex;
+flex-direction: column;
+align-items: center;
+min-height: 100vh;
+}
+
+header {
+text-align: center;
+padding: 1rem;
+width: 100%;
+background-color: var(--secondary);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.header-content {
+flex: 1;
+text-align: center;
+}
+
+h1 {
+margin: 0;
+font-size: 1.8rem;
+}
+
+.back-button {
+padding: 0.5rem 1rem;
+background-color: var(--primary);
+color: var(--text);
+text-decoration: none;
+border-radius: 4px;
+margin-left: 1rem;
+transition: background-color 0.2s;
+}
+
+.back-button:hover {
+background-color: var(--accent);
+}
+
+.container {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 1rem;
+max-width: 1200px;
+width: 100%;
+}
+
+.main-area {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 1rem;
+width: 100%;
+margin-bottom: 1rem;
+}
+
+.canvas-container {
+position: relative;
+background-color: #000;
+border: 2px solid var(--accent);
+border-radius: 4px;
+overflow: hidden;
+}
+
+#pixelCanvas {
+image-rendering: pixelated;
+image-rendering: crisp-edges;
+width: 512px;
+height: 512px;
+}
+
+.controls {
+background-color: var(--panel);
+border-radius: 8px;
+padding: 1rem;
+width: 320px;
+}
+
+.control-section {
+margin-bottom: 1.5rem;
+}
+
+.control-section h3 {
+margin-top: 0;
+margin-bottom: 0.5rem;
+border-bottom: 1px solid var(--accent);
+padding-bottom: 0.5rem;
+}
+
+.control-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 0.5rem;
+}
+
+.control-item {
+display: flex;
+flex-direction: column;
+}
+
+label {
+margin-bottom: 0.3rem;
+font-size: 0.9rem;
+}
+
+button {
+background-color: var(--primary);
+color: white;
+border: none;
+border-radius: 4px;
+padding: 0.5rem 1rem;
+font-size: 1rem;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+button:hover {
+background-color: var(--secondary);
+}
+
+button.active {
+background-color: var(--accent);
+}
+
+.full-width {
+grid-column: span 2;
+}
+
+input[type="range"] {
+width: 100%;
+}
+
+input[type="color"] {
+width: 100%;
+height: 30px;
+border: none;
+padding: 0;
+cursor: pointer;
+}
+
+select {
+width: 100%;
+padding: 0.3rem;
+border-radius: 4px;
+background-color: var(--bg);
+color: var(--text);
+border: 1px solid #4b5563;
+}
+
+.palette-container {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 0.5rem;
+margin-top: 0.5rem;
+}
+
+.palette-color {
+height: 24px;
+border-radius: 2px;
+cursor: pointer;
+border: 1px solid #4b5563;
+}
+
+.palette-color.active {
+border: 2px solid var(--accent);
+}
+
+.button-row {
+display: flex;
+gap: 0.5rem;
+margin-top: 1rem;
+}
+
+.action-buttons {
+display: flex;
+justify-content: space-between;
+margin-top: 1rem;
+}
+</style>
+</head>
+<body>
+<header>
+    <a href="../creative.html" class="back-button">← Back</a>
+    <div class="header-content">
+        <h1>Pixel Art Generator</h1>
+    </div>
+    <div style="width: 80px;"></div> <!-- Spacer for centering -->
+</header>
+
+<div class="container">
+<div class="main-area">
+<div class="canvas-container">
+<canvas id="pixelCanvas" width="128" height="128"></canvas>
+</div>
+
+<div class="controls">
+<div class="control-section">
+<h3>Generation</h3>
+<div class="control-grid">
+<div class="control-item full-width">
+<label for="generationType">Type</label>
+<select id="generationType">
+<option value="cellular">Cellular Automaton</option>
+<option value="noise">Perlin Noise</option>
+<option value="pattern">Pattern</option>
+<option value="mandala">Mandala</option>
+<option value="flow">Flow Field</option>
+<option value="bloom">Bloom</option>
+<option value="crystal">Crystal Growth</option>
+<option value="circuit">Circuit Board</option>
+</select>
+</div>
+
+<div class="control-item">
+<label for="colorScheme">Color Scheme</label>
+<select id="colorScheme">
+<option value="random">Random</option>
+<option value="monochrome">Monochrome</option>
+<option value="complementary">Complementary</option>
+<option value="analogous">Analogous</option>
+<option value="triadic">Triadic</option>
+<option value="pastel">Pastel</option>
+<option value="neon">Neon</option>
+<option value="retro">Retro</option>
+</select>
+</div>
+
+<div class="control-item">
+<label for="complexity">Complexity</label>
+<input type="range" id="complexity" min="1" max="10" value="5">
+</div>
+</div>
+
+<div class="button-row">
+<button id="generateBtn">Generate</button>
+<button id="animateBtn">Animate</button>
+</div>
+</div>
+
+<div class="control-section">
+<h3>Parameters</h3>
+<div class="control-grid" id="dynamicControls">
+<!-- Dynamic controls will be added here -->
+</div>
+</div>
+
+<div class="control-section">
+<h3>Colors</h3>
+<div class="control-grid">
+<div class="control-item">
+<label for="primaryColor">Primary</label>
+<input type="color" id="primaryColor" value="#6b46c1">
+</div>
+
+<div class="control-item">
+<label for="secondaryColor">Secondary</label>
+<input type="color" id="secondaryColor" value="#f472b6">
+</div>
+
+<div class="control-item full-width">
+<label>Generated Palette</label>
+<div class="palette-container" id="colorPalette">
+<!-- Color palette will be generated here -->
+</div>
+</div>
+</div>
+</div>
+
+<div class="control-section">
+<h3>Post-Processing</h3>
+<div class="control-grid">
+<div class="control-item">
+<label for="blur">Blur</label>
+<input type="range" id="blur" min="0" max="5" value="0" step="0.1">
+</div>
+
+<div class="control-item">
+<label for="pixelate">Pixelate</label>
+<input type="range" id="pixelate" min="1" max="8" value="1">
+</div>
+
+<div class="control-item">
+<label for="contrast">Contrast</label>
+<input type="range" id="contrast" min="0.5" max="2" value="1" step="0.1">
+</div>
+
+<div class="control-item">
+<label for="brightness">Brightness</label>
+<input type="range" id="brightness" min="0.5" max="1.5" value="1" step="0.1">
+</div>
+</div>
+</div>
+
+<div class="action-buttons">
+<button id="randomizeBtn">Randomize All</button>
+<button id="saveBtn">Save Image</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// Constants
+const CANVAS_SIZE = 128;
+const PREVIEW_SIZE = 512;
+
+// Get DOM elements
+const canvas = document.getElementById('pixelCanvas');
+const ctx = canvas.getContext('2d');
+const generateBtn = document.getElementById('generateBtn');
+const animateBtn = document.getElementById('animateBtn');
+const randomizeBtn = document.getElementById('randomizeBtn');
+const saveBtn = document.getElementById('saveBtn');
+const generationType = document.getElementById('generationType');
+const colorScheme = document.getElementById('colorScheme');
+const complexity = document.getElementById('complexity');
+const primaryColor = document.getElementById('primaryColor');
+const secondaryColor = document.getElementById('secondaryColor');
+const colorPalette = document.getElementById('colorPalette');
+const dynamicControls = document.getElementById('dynamicControls');
+
+// Post-processing controls
+const blur = document.getElementById('blur');
+const pixelate = document.getElementById('pixelate');
+const contrast = document.getElementById('contrast');
+const brightness = document.getElementById('brightness');
+
+// Global variables
+let pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
+let animationId = null;
+let palette = [];
+let currentGenParams = {};
+let needsUpdate = true;
+
+// Utility Functions
+function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
+}
+
+function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    return { h, s, l };
+}
+
+function hslToRgb(h, s, l) {
+    let r, g, b;
+    if (s === 0) {
+        r = g = b = l;
+    } else {
+        const hue2rgb = (p, q, t) => {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q - p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+    return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+}
+
+function setPixel(x, y, color) {
+    const i = (y * CANVAS_SIZE + x) * 4;
+    pixels[i] = color.r;
+    pixels[i + 1] = color.g;
+    pixels[i + 2] = color.b;
+    pixels[i + 3] = 255;
+}
+
+function updateCanvas() {
+    const imageData = new ImageData(pixels, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.putImageData(imageData, 0, 0);
+}
+
+// Simple Perlin Noise Implementation
+const Noise = (function() {
+    let p = new Uint8Array(512);
+    for (let i = 0; i < 256; i++) p[i] = p[i + 256] = Math.floor(Math.random() * 256);
+    function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+    function lerp(t, a, b) { return a + t * (b - a); }
+    function grad(hash, x, y) {
+        const h = hash & 15;
+        const u = h < 8 ? x : y;
+        const v = h < 4 ? y : h === 12 || h === 14 ? x : 0;
+        return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+    }
+    return function(x, y) {
+        const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+        x -= Math.floor(x); y -= Math.floor(y);
+        const u = fade(x), v = fade(y);
+        const A = p[X] + Y, B = p[X + 1] + Y;
+        return lerp(v, lerp(u, grad(p[A], x, y), grad(p[B], x - 1, y)),
+            lerp(u, grad(p[A + 1], x, y - 1), grad(p[B + 1], x - 1, y - 1)));
+    };
+})();
+
+// Initialize
+function init() {
+    clearCanvas();
+    setupEventListeners();
+    updateDynamicControls();
+    generatePalette();
+    generateArt();
+}
+
+// Clear the canvas
+function clearCanvas() {
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
+    for (let i = 0; i < pixels.length; i += 4) {
+        pixels[i] = 0; pixels[i + 1] = 0; pixels[i + 2] = 0; pixels[i + 3] = 255;
+    }
+}
+
+// Setup event listeners
+function setupEventListeners() {
+    generateBtn.addEventListener('click', generateArt);
+    animateBtn.addEventListener('click', function() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            animateBtn.textContent = 'Animate';
+            animateBtn.classList.remove('active');
+        } else {
+            animateBtn.textContent = 'Stop';
+            animateBtn.classList.add('active');
+            animate();
+        }
+    });
+    randomizeBtn.addEventListener('click', randomizeAll);
+    saveBtn.addEventListener('click', saveImage);
+    generationType.addEventListener('change', updateDynamicControls);
+    colorScheme.addEventListener('change', generatePalette);
+    primaryColor.addEventListener('change', generatePalette);
+    secondaryColor.addEventListener('change', generatePalette);
+    [blur, pixelate, contrast, brightness].forEach(control => {
+        control.addEventListener('input', applyPostProcessing);
+    });
+}
+
+// Generate dynamic controls
+function updateDynamicControls() {
+    dynamicControls.innerHTML = '';
+    const type = generationType.value;
+    switch (type) {
+        case 'cellular':
+            addRangeControl('rule', 'Rule', 0, 255, 30);
+            addRangeControl('initialDensity', 'Initial Density', 0, 1, 0.3, 0.01);
+            addRangeControl('iterations', 'Iterations', 1, 100, 20);
+            break;
+        case 'noise':
+            addRangeControl('scale', 'Scale', 0.001, 0.1, 0.03, 0.001);
+            addRangeControl('octaves', 'Octaves', 1, 8, 4);
+            addRangeControl('persistence', 'Persistence', 0.1, 1, 0.5, 0.1);
+            addRangeControl('lacunarity', 'Lacunarity', 1, 3, 2, 0.1);
+            break;
+        case 'pattern':
+            addSelectControl('patternType', 'Pattern Type', [
+                { value: 'circles', text: 'Circles' }, { value: 'squares', text: 'Squares' },
+                { value: 'triangles', text: 'Triangles' }, { value: 'hexagons', text: 'Hexagons' },
+                { value: 'stripes', text: 'Stripes' }, { value: 'grid', text: 'Grid' }
+            ]);
+            addRangeControl('density', 'Density', 1, 32, 8);
+            addRangeControl('variation', 'Variation', 0, 1, 0.5, 0.1);
+            break;
+        case 'mandala':
+            addRangeControl('segments', 'Segments', 3, 24, 8);
+            addRangeControl('layers', 'Layers', 1, 10, 5);
+            addRangeControl('complexity', 'Detail', 1, 10, 5);
+            addCheckboxControl('mirrorX', 'Mirror X', true);
+            addCheckboxControl('mirrorY', 'Mirror Y', true);
+            break;
+        case 'flow':
+            addRangeControl('noiseScale', 'Noise Scale', 0.001, 0.1, 0.02, 0.001);
+            addRangeControl('flowStrength', 'Flow Strength', 0.1, 5, 1, 0.1);
+            addRangeControl('particleCount', 'Particle Count', 10, 500, 100);
+            addRangeControl('particleLife', 'Particle Life', 10, 200, 50);
+            break;
+        case 'bloom':
+            addRangeControl('seedCount', 'Seed Count', 1, 20, 5);
+            addRangeControl('bloomSize', 'Bloom Size', 1, 50, 20);
+            addRangeControl('fadeRate', 'Fade Rate', 0.1, 1, 0.5, 0.1);
+            break;
+        case 'crystal':
+            addRangeControl('seedCount', 'Seed Count', 1, 10, 3);
+            addRangeControl('growthRate', 'Growth Rate', 0.01, 0.5, 0.1, 0.01);
+            addRangeControl('maxIterations', 'Max Iterations', 10, 1000, 100);
+            break;
+        case 'circuit':
+            addRangeControl('components', 'Components', 5, 50, 20);
+            addRangeControl('maxBranches', 'Max Branches', 1, 10, 4);
+            addRangeControl('branchProb', 'Branch Probability', 0.1, 0.9, 0.4, 0.1);
+            break;
+    }
+    updateCurrentParams();
+}
+
+function addRangeControl(id, label, min, max, value, step = 1) {
+    const controlItem = document.createElement('div');
+    controlItem.className = 'control-item';
+    const labelElement = document.createElement('label');
+    labelElement.setAttribute('for', id);
+    labelElement.textContent = label;
+    const input = document.createElement('input');
+    input.type = 'range';
+    input.id = id;
+    input.min = min;
+    input.max = max;
+    input.value = value;
+    input.step = step;
+    input.addEventListener('input', () => {
+        updateCurrentParams();
+        if (!animationId) generateArt();
+        else needsUpdate = true;
+    });
+    controlItem.appendChild(labelElement);
+    controlItem.appendChild(input);
+    dynamicControls.appendChild(controlItem);
+}
+
+function addSelectControl(id, label, options) {
+    const controlItem = document.createElement('div');
+    controlItem.className = 'control-item';
+    const labelElement = document.createElement('label');
+    labelElement.setAttribute('for', id);
+    labelElement.textContent = label;
+    const select = document.createElement('select');
+    select.id = id;
+    options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        optionElement.textContent = option.text;
+        select.appendChild(optionElement);
+    });
+    select.addEventListener('change', () => {
+        updateCurrentParams();
+        if (!animationId) generateArt();
+        else needsUpdate = true;
+    });
+    controlItem.appendChild(labelElement);
+    controlItem.appendChild(select);
+    dynamicControls.appendChild(controlItem);
+}
+
+function addCheckboxControl(id, label, checked) {
+    const controlItem = document.createElement('div');
+    controlItem.className = 'control-item';
+    const labelElement = document.createElement('label');
+    labelElement.setAttribute('for', id);
+    labelElement.textContent = label;
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = id;
+    input.checked = checked;
+    input.addEventListener('change', () => {
+        updateCurrentParams();
+        if (!animationId) generateArt();
+        else needsUpdate = true;
+    });
+    controlItem.appendChild(labelElement);
+    controlItem.appendChild(input);
+    dynamicControls.appendChild(controlItem);
+}
+
+function updateCurrentParams() {
+    currentGenParams = {};
+    const type = generationType.value;
+    const dynamicInputs = dynamicControls.querySelectorAll('input, select');
+    dynamicInputs.forEach(input => {
+        if (input.type === 'checkbox') currentGenParams[input.id] = input.checked;
+        else if (input.type === 'range') currentGenParams[input.id] = parseFloat(input.value);
+        else currentGenParams[input.id] = input.value;
+    });
+    currentGenParams.type = type;
+    currentGenParams.complexity = parseInt(complexity.value);
+    currentGenParams.colorScheme = colorScheme.value;
+    currentGenParams.primaryColor = hexToRgb(primaryColor.value);
+    currentGenParams.secondaryColor = hexToRgb(secondaryColor.value);
+}
+
+function generatePalette() {
+    const scheme = colorScheme.value;
+    const primary = hexToRgb(primaryColor.value);
+    const secondary = hexToRgb(secondaryColor.value);
+    palette = [];
+    switch (scheme) {
+        case 'monochrome':
+            for (let i = 0; i < 8; i++) {
+                const factor = i / 7;
+                palette.push({ r: Math.round(primary.r * factor), g: Math.round(primary.g * factor), b: Math.round(primary.b * factor) });
+            }
+            break;
+        case 'complementary':
+            const complement = { r: 255 - primary.r, g: 255 - primary.g, b: 255 - primary.b };
+            for (let i = 0; i < 8; i++) {
+                const factor = i / 7;
+                palette.push({
+                    r: Math.round(primary.r * (1 - factor) + complement.r * factor),
+                    g: Math.round(primary.g * (1 - factor) + complement.g * factor),
+                    b: Math.round(primary.b * (1 - factor) + complement.b * factor)
+                });
+            }
+            break;
+        case 'analogous':
+            const hsl = rgbToHsl(primary.r, primary.g, primary.b);
+            for (let i = 0; i < 8; i++) {
+                const newHue = (hsl.h + (i - 4) * 15 / 360) % 1;
+                palette.push(hslToRgb(newHue, hsl.s, hsl.l));
+            }
+            break;
+        case 'triadic':
+            const hsl1 = rgbToHsl(primary.r, primary.g, primary.b);
+            const hsl2 = { h: (hsl1.h + 1/3) % 1, s: hsl1.s, l: hsl1.l };
+            const hsl3 = { h: (hsl1.h + 2/3) % 1, s: hsl1.s, l: hsl1.l };
+            for (let i = 0; i < 8; i++) {
+                if (i < 3) palette.push(hslToRgb(hsl1.h, hsl1.s, 0.3 + i * 0.2));
+                else if (i < 6) palette.push(hslToRgb(hsl2.h, hsl2.s, 0.3 + (i - 3) * 0.2));
+                else palette.push(hslToRgb(hsl3.h, hsl3.s, 0.3 + (i - 6) * 0.2));
+            }
+            break;
+        case 'pastel':
+            const hslPrimary = rgbToHsl(primary.r, primary.g, primary.b);
+            for (let i = 0; i < 8; i++) {
+                const hue = (hslPrimary.h + i * 0.1) % 1;
+                palette.push(hslToRgb(hue, 0.3, 0.8));
+            }
+            break;
+        case 'neon':
+            for (let i = 0; i < 8; i++) palette.push(hslToRgb(i / 8, 1.0, 0.6));
+            break;
+        case 'retro':
+            palette = [
+                { r: 239, g: 71, b: 111 }, { r: 255, g: 209, b: 102 }, { r: 6, g: 214, b: 160 },
+                { r: 17, g: 138, b: 178 }, { r: 7, g: 59, b: 76 }, { r: 255, g: 141, b: 161 },
+                { r: 255, g: 170, b: 51 }, { r: 17, g: 167, b: 157 }
+            ];
+            break;
+        case 'random':
+        default:
+            for (let i = 0; i < 8; i++) {
+                palette.push({ r: Math.floor(Math.random() * 256), g: Math.floor(Math.random() * 256), b: Math.floor(Math.random() * 256) });
+            }
+            break;
+    }
+    updatePaletteDisplay();
+    if (!animationId) generateArt();
+}
+
+function updatePaletteDisplay() {
+    colorPalette.innerHTML = '';
+    palette.forEach((color, index) => {
+        const colorElement = document.createElement('div');
+        colorElement.className = 'palette-color';
+        colorElement.style.backgroundColor = `rgb(${color.r},${color.g},${color.b})`;
+        colorElement.dataset.index = index;
+        colorElement.addEventListener('click', () => {
+            primaryColor.value = `#${((1 << 24) + (color.r << 16) + (color.g << 8) + color.b).toString(16).slice(1)}`;
+            generatePalette();
+        });
+        colorPalette.appendChild(colorElement);
+    });
+}
+
+function generateArt() {
+    clearCanvas();
+    updateCurrentParams();
+    switch (currentGenParams.type) {
+        case 'cellular': generateCellularAutomaton(); break;
+        case 'noise': generatePerlinNoise(); break;
+        case 'pattern': generatePattern(); break;
+        case 'mandala': generateMandala(); break;
+        case 'flow': generateFlowField(); break;
+        case 'bloom': generateBloom(); break;
+        case 'crystal': generateCrystalGrowth(); break;
+        case 'circuit': generateCircuitBoard(); break;
+        default: generatePerlinNoise(); break;
+    }
+    applyPostProcessing();
+    updateCanvas();
+}
+
+function generateCellularAutomaton() {
+    const rule = currentGenParams.rule || 30;
+    const initialDensity = currentGenParams.initialDensity || 0.3;
+    const iterations = currentGenParams.iterations || 20;
+    let cells = new Array(CANVAS_SIZE).fill(0).map(() => Math.random() < initialDensity ? 1 : 0);
+    const ruleBinary = rule.toString(2).padStart(8, '0');
+    for (let y = 0; y < Math.min(iterations, CANVAS_SIZE); y++) {
+        for (let x = 0; x < CANVAS_SIZE; x++) {
+            const value = cells[x];
+            const colorIndex = Math.floor(value * (palette.length - 1));
+            setPixel(x, y, palette[colorIndex] || palette[0]);
+        }
+        if (y < CANVAS_SIZE - 1) {
+            const newCells = new Array(CANVAS_SIZE);
+            for (let x = 0; x < CANVAS_SIZE; x++) {
+                const left = cells[(x - 1 + CANVAS_SIZE) % CANVAS_SIZE];
+                const center = cells[x];
+                const right = cells[(x + 1) % CANVAS_SIZE];
+                const pattern = (left << 2) | (center << 1) | right;
+                newCells[x] = parseInt(ruleBinary[7 - pattern]);
+            }
+            cells = newCells;
+        }
+    }
+}
+
+function generatePerlinNoise() {
+    const scale = currentGenParams.scale || 0.03;
+    const octaves = currentGenParams.octaves || 4;
+    const persistence = currentGenParams.persistence || 0.5;
+    const lacunarity = currentGenParams.lacunarity || 2;
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+        for (let x = 0; x < CANVAS_SIZE; x++) {
+            let total = 0, frequency = scale, amplitude = 1, maxValue = 0;
+            for (let i = 0; i < octaves; i++) {
+                total += Noise(x * frequency, y * frequency) * amplitude;
+                maxValue += amplitude;
+                amplitude *= persistence;
+                frequency *= lacunarity;
+            }
+            const value = (total / maxValue + 1) / 2;
+            const colorIndex = Math.floor(value * (palette.length - 1));
+            setPixel(x, y, palette[colorIndex] || palette[0]);
+        }
+    }
+}
+
+function generatePattern() {
+    const patternType = currentGenParams.patternType || 'circles';
+    const density = currentGenParams.density || 8;
+    const variation = currentGenParams.variation || 0.5;
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+        for (let x = 0; x < CANVAS_SIZE; x++) {
+            let value;
+            switch (patternType) {
+                case 'circles': value = Math.sin(Math.sqrt(x * x + y * y) * density * variation); break;
+                case 'squares': value = Math.sin(x * density) * Math.cos(y * density); break;
+                case 'triangles': value = Math.abs((x % density) - (y % density)) / density; break;
+                case 'hexagons': value = Math.sin(x * density) + Math.cos(y * density); break;
+                case 'stripes': value = Math.sin(x * density * variation); break;
+                case 'grid': value = (x % density < 1 || y % density < 1) ? 1 : 0; break;
+            }
+            const colorIndex = Math.floor(((value + 1) / 2) * (palette.length - 1));
+            setPixel(x, y, palette[colorIndex] || palette[0]);
+        }
+    }
+}
+
+function generateMandala() {
+    const segments = currentGenParams.segments || 8;
+    const layers = currentGenParams.layers || 5;
+    const detail = currentGenParams.complexity || 5;
+    const mirrorX = currentGenParams.mirrorX !== false;
+    const mirrorY = currentGenParams.mirrorY !== false;
+    for (let y = 0; y < CANVAS_SIZE / 2; y++) {
+        for (let x = 0; x < CANVAS_SIZE / 2; x++) {
+            const dx = x - CANVAS_SIZE / 2, dy = y - CANVAS_SIZE / 2;
+            const angle = Math.atan2(dy, dx) * segments;
+            const radius = Math.sqrt(dx * dx + dy * dy);
+            const value = Math.sin(radius * layers * 0.1 + angle * detail * 0.1);
+            const colorIndex = Math.floor(((value + 1) / 2) * (palette.length - 1));
+            const color = palette[colorIndex] || palette[0];
+            setPixel(x, y, color);
+            if (mirrorX) setPixel(CANVAS_SIZE - 1 - x, y, color);
+            if (mirrorY) setPixel(x, CANVAS_SIZE - 1 - y, color);
+            if (mirrorX && mirrorY) setPixel(CANVAS_SIZE - 1 - x, CANVAS_SIZE - 1 - y, color);
+        }
+    }
+}
+
+function generateFlowField() {
+    const noiseScale = currentGenParams.noiseScale || 0.02;
+    const flowStrength = currentGenParams.flowStrength || 1;
+    const particleCount = currentGenParams.particleCount || 100;
+    const particleLife = currentGenParams.particleLife || 50;
+    const particles = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * CANVAS_SIZE, y: Math.random() * CANVAS_SIZE, life: particleLife
+    }));
+    for (let i = 0; i < particleLife; i++) {
+        particles.forEach(p => {
+            if (p.life > 0) {
+                const angle = Noise(p.x * noiseScale, p.y * noiseScale) * Math.PI * 2;
+                p.x += Math.cos(angle) * flowStrength;
+                p.y += Math.sin(angle) * flowStrength;
+                p.life--;
+                if (p.x >= 0 && p.x < CANVAS_SIZE && p.y >= 0 && p.y < CANVAS_SIZE) {
+                    const colorIndex = Math.floor((p.life / particleLife) * (palette.length - 1));
+                    setPixel(Math.floor(p.x), Math.floor(p.y), palette[colorIndex] || palette[0]);
+                }
+            }
+        });
+    }
+}
+
+function generateBloom() {
+    const seedCount = currentGenParams.seedCount || 5;
+    const bloomSize = currentGenParams.bloomSize || 20;
+    const fadeRate = currentGenParams.fadeRate || 0.5;
+    const seeds = Array.from({ length: seedCount }, () => ({
+        x: Math.random() * CANVAS_SIZE, y: Math.random() * CANVAS_SIZE
+    }));
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+        for (let x = 0; x < CANVAS_SIZE; x++) {
+            let total = 0;
+            seeds.forEach(seed => {
+                const dx = x - seed.x, dy = y - seed.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                total += Math.max(0, 1 - dist / bloomSize) * fadeRate;
+            });
+            const value = Math.min(1, total);
+            const colorIndex = Math.floor(value * (palette.length - 1));
+            setPixel(x, y, palette[colorIndex] || palette[0]);
+        }
+    }
+}
+
+function generateCrystalGrowth() {
+    const seedCount = currentGenParams.seedCount || 3;
+    const growthRate = currentGenParams.growthRate || 0.1;
+    const maxIterations = currentGenParams.maxIterations || 100;
+    const seeds = Array.from({ length: seedCount }, () => ({
+        x: Math.floor(Math.random() * CANVAS_SIZE), y: Math.floor(Math.random() * CANVAS_SIZE)
+    }));
+    const grid = new Uint8Array(CANVAS_SIZE * CANVAS_SIZE);
+    seeds.forEach(seed => grid[seed.y * CANVAS_SIZE + seed.x] = 1);
+    for (let i = 0; i < maxIterations; i++) {
+        for (let y = 0; y < CANVAS_SIZE; y++) {
+            for (let x = 0; x < CANVAS_SIZE; x++) {
+                if (grid[y * CANVAS_SIZE + x] === 0) {
+                    const neighbors = [
+                        grid[((y - 1 + CANVAS_SIZE) % CANVAS_SIZE) * CANVAS_SIZE + x],
+                        grid[((y + 1) % CANVAS_SIZE) * CANVAS_SIZE + x],
+                        grid[y * CANVAS_SIZE + ((x - 1 + CANVAS_SIZE) % CANVAS_SIZE)],
+                        grid[y * CANVAS_SIZE + ((x + 1) % CANVAS_SIZE)]
+                    ].filter(n => n > 0).length;
+                    if (neighbors > 0 && Math.random() < growthRate) {
+                        grid[y * CANVAS_SIZE + x] = 1;
+                    }
+                }
+            }
+        }
+    }
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+        for (let x = 0; x < CANVAS_SIZE; x++) {
+            const value = grid[y * CANVAS_SIZE + x];
+            const colorIndex = Math.floor(value * (palette.length - 1));
+            setPixel(x, y, palette[colorIndex] || palette[0]);
+        }
+    }
+}
+
+function generateCircuitBoard() {
+    const components = currentGenParams.components || 20;
+    const maxBranches = currentGenParams.maxBranches || 4;
+    const branchProb = currentGenParams.branchProb || 0.4;
+    const visited = new Uint8Array(CANVAS_SIZE * CANVAS_SIZE);
+    function drawLine(x, y, dx, dy, steps) {
+        for (let i = 0; i < steps && x >= 0 && x < CANVAS_SIZE && y >= 0 && y < CANVAS_SIZE; i++) {
+            visited[y * CANVAS_SIZE + x] = 1;
+            setPixel(x, y, palette[Math.floor(Math.random() * palette.length)]);
+            x += dx; y += dy;
+            if (Math.random() < branchProb && maxBranches > 0) {
+                const newDir = Math.random() < 0.5 ? [1, 0] : [0, 1];
+                drawLine(x, y, newDir[0], newDir[1], Math.floor(Math.random() * 10));
+            }
+        }
+    }
+    for (let i = 0; i < components; i++) {
+        const x = Math.floor(Math.random() * CANVAS_SIZE);
+        const y = Math.floor(Math.random() * CANVAS_SIZE);
+        const dir = Math.random() < 0.5 ? [1, 0] : [0, 1];
+        drawLine(x, y, dir[0], dir[1], Math.floor(Math.random() * 20));
+    }
+}
+
+function applyPostProcessing() {
+    const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    let data = imageData.data;
+    const b = parseFloat(blur.value);
+    const p = parseInt(pixelate.value);
+    const c = parseFloat(contrast.value);
+    const br = parseFloat(brightness.value);
+    // Brightness and Contrast
+    for (let i = 0; i < data.length; i += 4) {
+        data[i] = Math.min(255, Math.max(0, (data[i] - 128) * c + 128 * br));
+        data[i + 1] = Math.min(255, Math.max(0, (data[i + 1] - 128) * c + 128 * br));
+        data[i + 2] = Math.min(255, Math.max(0, (data[i + 2] - 128) * c + 128 * br));
+    }
+    ctx.putImageData(imageData, 0, 0);
+    // Pixelate
+    if (p > 1) {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = CANVAS_SIZE / p;
+        tempCanvas.height = CANVAS_SIZE / p;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.drawImage(canvas, 0, 0, CANVAS_SIZE / p, CANVAS_SIZE / p);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(tempCanvas, 0, 0, CANVAS_SIZE / p, CANVAS_SIZE / p, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    }
+    // Blur (simple approximation)
+    if (b > 0) ctx.filter = `blur(${b}px)`;
+    else ctx.filter = 'none';
+    ctx.drawImage(canvas, 0, 0);
+}
+
+function animate() {
+    generateArt();
+    if (needsUpdate) needsUpdate = false;
+    animationId = requestAnimationFrame(animate);
+}
+
+function randomizeAll() {
+    complexity.value = Math.floor(Math.random() * 10) + 1;
+    primaryColor.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    secondaryColor.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    generatePalette();
+    generateArt();
+}
+
+function saveImage() {
+    const link = document.createElement('a');
+    link.download = 'pixel-art.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+// Start the application
+init();
+</script>
+</body>
+</html> 
