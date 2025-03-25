@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Art Generator - Lunar Labyrinth</title>
+    <title>Pixel Art Pattern Generator</title>
     <style>
         :root {
             --primary: #6b46c1;
@@ -144,10 +144,6 @@
             background-color: var(--secondary);
         }
 
-        button.active {
-            background-color: var(--accent);
-        }
-
         .full-width {
             grid-column: span 2;
         }
@@ -187,16 +183,6 @@
             border: 1px solid #4b5563;
         }
 
-        .palette-color.active {
-            border: 2px solid var(--accent);
-        }
-
-        .button-row {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
         .action-buttons {
             display: flex;
             justify-content: space-between;
@@ -208,7 +194,7 @@
     <header>
         <a href="../creative.html" class="back-button">← Back</a>
         <div class="header-content">
-            <h1>Pixel Art Generator</h1>
+            <h1>Pixel Art Pattern Generator</h1>
         </div>
         <div style="width: 80px;"></div> <!-- Spacer for centering -->
     </header>
@@ -221,50 +207,46 @@
 
             <div class="controls">
                 <div class="control-section">
-                    <h3>Generation</h3>
+                    <h3>Pattern</h3>
                     <div class="control-grid">
                         <div class="control-item full-width">
-                            <label for="generationType">Type</label>
-                            <select id="generationType">
-                                <option value="cellular">Cellular Automaton</option>
-                                <option value="noise">Perlin Noise</option>
-                                <option value="pattern">Pattern</option>
-                                <option value="mandala">Mandala</option>
-                                <option value="flow">Flow Field</option>
-                                <option value="bloom">Bloom</option>
-                                <option value="crystal">Crystal Growth</option>
-                                <option value="circuit">Circuit Board</option>
+                            <label for="patternStyle">Style</label>
+                            <select id="patternStyle">
+                                <option value="circles">Circles</option>
+                                <option value="squares">Squares</option>
+                                <option value="stripes">Stripes</option>
+                                <option value="triangles">Triangles</option>
+                                <option value="hexagons">Hexagons</option>
+                                <option value="grid">Grid</option>
                             </select>
                         </div>
-
                         <div class="control-item">
-                            <label for="colorScheme">Color Scheme</label>
-                            <select id="colorScheme">
-                                <option value="random">Random</option>
-                                <option value="monochrome">Monochrome</option>
-                                <option value="complementary">Complementary</option>
-                                <option value="analogous">Analogous</option>
-                                <option value="triadic">Triadic</option>
-                                <option value="pastel">Pastel</option>
-                                <option value="neon">Neon</option>
-                                <option value="retro">Retro</option>
-                            </select>
+                            <label for="scale">Scale</label>
+                            <input type="range" id="scale" min="0.1" max="10" value="1" step="0.1">
                         </div>
-
                         <div class="control-item">
-                            <label for="complexity">Complexity</label>
-                            <input type="range" id="complexity" min="1" max="10" value="5">
+                            <label for="intensity">Intensity</label>
+                            <input type="range" id="intensity" min="0" max="1" value="0.5" step="0.1">
                         </div>
-                    </div>
-
-                    <div class="button-row">
-                        <button id="generateBtn">Generate</button>
-                        <button id="animateBtn">Animate</button>
                     </div>
                 </div>
 
                 <div class="control-section">
-                    <h3>Parameters</h3>
+                    <h3>Symmetry</h3>
+                    <div class="control-grid">
+                        <div class="control-item">
+                            <label for="mirrorX">Mirror Horizontally</label>
+                            <input type="checkbox" id="mirrorX" checked>
+                        </div>
+                        <div class="control-item">
+                            <label for="mirrorY">Mirror Vertically</label>
+                            <input type="checkbox" id="mirrorY" checked>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>Style Parameters</h3>
                     <div class="control-grid" id="dynamicControls">
                         <!-- Dynamic controls will be added here -->
                     </div>
@@ -277,12 +259,23 @@
                             <label for="primaryColor">Primary</label>
                             <input type="color" id="primaryColor" value="#6b46c1">
                         </div>
-
                         <div class="control-item">
                             <label for="secondaryColor">Secondary</label>
                             <input type="color" id="secondaryColor" value="#f472b6">
                         </div>
-
+                        <div class="control-item full-width">
+                            <label for="colorScheme">Color Scheme</label>
+                            <select id="colorScheme">
+                                <option value="random">Random</option>
+                                <option value="monochrome">Monochrome</option>
+                                <option value="complementary">Complementary</option>
+                                <option value="analogous">Analogous</option>
+                                <option value="triadic">Triadic</option>
+                                <option value="pastel">Pastel</option>
+                                <option value="neon">Neon</option>
+                                <option value="retro">Retro</option>
+                            </select>
+                        </div>
                         <div class="control-item full-width">
                             <label>Generated Palette</label>
                             <div class="palette-container" id="colorPalette">
@@ -299,17 +292,14 @@
                             <label for="blur">Blur</label>
                             <input type="range" id="blur" min="0" max="5" value="0" step="0.1">
                         </div>
-
                         <div class="control-item">
                             <label for="pixelate">Pixelate</label>
                             <input type="range" id="pixelate" min="1" max="8" value="1">
                         </div>
-
                         <div class="control-item">
                             <label for="contrast">Contrast</label>
                             <input type="range" id="contrast" min="0.5" max="2" value="1" step="0.1">
                         </div>
-
                         <div class="control-item">
                             <label for="brightness">Brightness</label>
                             <input type="range" id="brightness" min="0.5" max="1.5" value="1" step="0.1">
@@ -318,6 +308,7 @@
                 </div>
 
                 <div class="action-buttons">
+                    <button id="generateBtn">Generate</button>
                     <button id="randomizeBtn">Randomize All</button>
                     <button id="saveBtn">Save Image</button>
                 </div>
@@ -334,18 +325,18 @@
         const canvas = document.getElementById('pixelCanvas');
         const ctx = canvas.getContext('2d');
         const generateBtn = document.getElementById('generateBtn');
-        const animateBtn = document.getElementById('animateBtn');
         const randomizeBtn = document.getElementById('randomizeBtn');
         const saveBtn = document.getElementById('saveBtn');
-        const generationType = document.getElementById('generationType');
-        const colorScheme = document.getElementById('colorScheme');
-        const complexity = document.getElementById('complexity');
+        const patternStyle = document.getElementById('patternStyle');
+        const scale = document.getElementById('scale');
+        const intensity = document.getElementById('intensity');
+        const mirrorX = document.getElementById('mirrorX');
+        const mirrorY = document.getElementById('mirrorY');
         const primaryColor = document.getElementById('primaryColor');
         const secondaryColor = document.getElementById('secondaryColor');
+        const colorScheme = document.getElementById('colorScheme');
         const colorPalette = document.getElementById('colorPalette');
         const dynamicControls = document.getElementById('dynamicControls');
-
-        // Post-processing controls
         const blur = document.getElementById('blur');
         const pixelate = document.getElementById('pixelate');
         const contrast = document.getElementById('contrast');
@@ -353,10 +344,8 @@
 
         // Global variables
         let pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
-        let animationId = null;
         let palette = [];
         let currentGenParams = {};
-        let needsUpdate = true;
 
         // Utility Functions
         function hexToRgb(hex) {
@@ -415,32 +404,15 @@
             pixels[i + 3] = 255;
         }
 
+        function getPixel(x, y) {
+            const i = (y * CANVAS_SIZE + x) * 4;
+            return { r: pixels[i], g: pixels[i + 1], b: pixels[i + 2] };
+        }
+
         function updateCanvas() {
             const imageData = new ImageData(pixels, CANVAS_SIZE, CANVAS_SIZE);
             ctx.putImageData(imageData, 0, 0);
         }
-
-        // Simple Perlin Noise Implementation
-        const Noise = (function() {
-            let p = new Uint8Array(512);
-            for (let i = 0; i < 256; i++) p[i] = p[i + 256] = Math.floor(Math.random() * 256);
-            function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-            function lerp(t, a, b) { return a + t * (b - a); }
-            function grad(hash, x, y) {
-                const h = hash & 15;
-                const u = h < 8 ? x : y;
-                const v = h < 4 ? y : h === 12 || h === 14 ? x : 0;
-                return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
-            }
-            return function(x, y) {
-                const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
-                x -= Math.floor(x); y -= Math.floor(y);
-                const u = fade(x), v = fade(y);
-                const A = p[X] + Y, B = p[X + 1] + Y;
-                return lerp(v, lerp(u, grad(p[A], x, y), grad(p[B], x - 1, y)),
-                    lerp(u, grad(p[A + 1], x, y - 1), grad(p[B + 1], x - 1, y - 1)));
-            };
-        })();
 
         // Initialize
         function init() {
@@ -464,24 +436,18 @@
         // Setup event listeners
         function setupEventListeners() {
             generateBtn.addEventListener('click', generateArt);
-            animateBtn.addEventListener('click', function() {
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                    animateBtn.textContent = 'Animate';
-                    animateBtn.classList.remove('active');
-                } else {
-                    animateBtn.textContent = 'Stop';
-                    animateBtn.classList.add('active');
-                    animate();
-                }
-            });
             randomizeBtn.addEventListener('click', randomizeAll);
             saveBtn.addEventListener('click', saveImage);
-            generationType.addEventListener('change', updateDynamicControls);
-            colorScheme.addEventListener('change', generatePalette);
-            primaryColor.addEventListener('change', generatePalette);
-            secondaryColor.addEventListener('change', generatePalette);
+            patternStyle.addEventListener('change', () => {
+                updateDynamicControls();
+                generateArt();
+            });
+            [scale, intensity, mirrorX, mirrorY].forEach(control => {
+                control.addEventListener('input', generateArt);
+            });
+            [colorScheme, primaryColor, secondaryColor].forEach(control => {
+                control.addEventListener('change', generatePalette);
+            });
             [blur, pixelate, contrast, brightness].forEach(control => {
                 control.addEventListener('input', applyPostProcessing);
             });
@@ -490,58 +456,35 @@
         // Generate dynamic controls
         function updateDynamicControls() {
             dynamicControls.innerHTML = '';
-            const type = generationType.value;
-            switch (type) {
-                case 'cellular':
-                    addRangeControl('rule', 'Rule', 0, 255, 30);
-                    addRangeControl('initialDensity', 'Initial Density', 0, 1, 0.3, 0.01);
-                    addRangeControl('iterations', 'Iterations', 1, 100, 20);
+            const style = patternStyle.value;
+            switch (style) {
+                case 'circles':
+                    addRangeControl('rings', 'Number of Rings', 1, 20, 5, 1);
+                    addRangeControl('thickness', 'Ring Thickness', 0, 1, 0.5, 0.1);
                     break;
-                case 'noise':
-                    addRangeControl('scale', 'Scale', 0.001, 0.1, 0.03, 0.001);
-                    addRangeControl('octaves', 'Octaves', 1, 8, 4);
-                    addRangeControl('persistence', 'Persistence', 0.1, 1, 0.5, 0.1);
-                    addRangeControl('lacunarity', 'Lacunarity', 1, 3, 2, 0.1);
+                case 'squares':
+                    addRangeControl('rotation', 'Rotation', 0, 360, 0, 1);
+                    addRangeControl('sizeVariation', 'Size Variation', 0, 1, 0.5, 0.1);
                     break;
-                case 'pattern':
-                    addSelectControl('patternType', 'Pattern Type', [
-                        { value: 'circles', text: 'Circles' }, { value: 'squares', text: 'Squares' },
-                        { value: 'triangles', text: 'Triangles' }, { value: 'hexagons', text: 'Hexagons' },
-                        { value: 'stripes', text: 'Stripes' }, { value: 'grid', text: 'Grid' }
+                case 'stripes':
+                    addSelectControl('direction', 'Direction', [
+                        { value: 'horizontal', text: 'Horizontal' },
+                        { value: 'vertical', text: 'Vertical' },
+                        { value: 'diagonalLeft', text: 'Diagonal Left' },
+                        { value: 'diagonalRight', text: 'Diagonal Right' }
                     ]);
-                    addRangeControl('density', 'Density', 1, 32, 8);
-                    addRangeControl('variation', 'Variation', 0, 1, 0.5, 0.1);
+                    addRangeControl('stripeWidth', 'Stripe Width', 1, 20, 5, 1);
                     break;
-                case 'mandala':
-                    addRangeControl('segments', 'Segments', 3, 24, 8);
-                    addRangeControl('layers', 'Layers', 1, 10, 5);
-                    addRangeControl('complexity', 'Detail', 1, 10, 5);
-                    addCheckboxControl('mirrorX', 'Mirror X', true);
-                    addCheckboxControl('mirrorY', 'Mirror Y', true);
+                case 'triangles':
+                    addRangeControl('density', 'Density', 1, 32, 8, 1);
                     break;
-                case 'flow':
-                    addRangeControl('noiseScale', 'Noise Scale', 0.001, 0.1, 0.02, 0.001);
-                    addRangeControl('flowStrength', 'Flow Strength', 0.1, 5, 1, 0.1);
-                    addRangeControl('particleCount', 'Particle Count', 10, 500, 100);
-                    addRangeControl('particleLife', 'Particle Life', 10, 200, 50);
+                case 'hexagons':
+                    addRangeControl('density', 'Density', 1, 32, 8, 1);
                     break;
-                case 'bloom':
-                    addRangeControl('seedCount', 'Seed Count', 1, 20, 5);
-                    addRangeControl('bloomSize', 'Bloom Size', 1, 50, 20);
-                    addRangeControl('fadeRate', 'Fade Rate', 0.1, 1, 0.5, 0.1);
-                    break;
-                case 'crystal':
-                    addRangeControl('seedCount', 'Seed Count', 1, 10, 3);
-                    addRangeControl('growthRate', 'Growth Rate', 0.01, 0.5, 0.1, 0.01);
-                    addRangeControl('maxIterations', 'Max Iterations', 10, 1000, 100);
-                    break;
-                case 'circuit':
-                    addRangeControl('components', 'Components', 5, 50, 20);
-                    addRangeControl('maxBranches', 'Max Branches', 1, 10, 4);
-                    addRangeControl('branchProb', 'Branch Probability', 0.1, 0.9, 0.4, 0.1);
+                case 'grid':
+                    addRangeControl('gridSize', 'Grid Size', 1, 32, 8, 1);
                     break;
             }
-            updateCurrentParams();
         }
 
         function addRangeControl(id, label, min, max, value, step = 1) {
@@ -557,11 +500,7 @@
             input.max = max;
             input.value = value;
             input.step = step;
-            input.addEventListener('input', () => {
-                updateCurrentParams();
-                if (!animationId) generateArt();
-                else needsUpdate = true;
-            });
+            input.addEventListener('input', generateArt);
             controlItem.appendChild(labelElement);
             controlItem.appendChild(input);
             dynamicControls.appendChild(controlItem);
@@ -581,47 +520,25 @@
                 optionElement.textContent = option.text;
                 select.appendChild(optionElement);
             });
-            select.addEventListener('change', () => {
-                updateCurrentParams();
-                if (!animationId) generateArt();
-                else needsUpdate = true;
-            });
+            select.addEventListener('change', generateArt);
             controlItem.appendChild(labelElement);
             controlItem.appendChild(select);
             dynamicControls.appendChild(controlItem);
         }
 
-        function addCheckboxControl(id, label, checked) {
-            const controlItem = document.createElement('div');
-            controlItem.className = 'control-item';
-            const labelElement = document.createElement('label');
-            labelElement.setAttribute('for', id);
-            labelElement.textContent = label;
-            const input = document.createElement('input');
-            input.type = 'checkbox';
-            input.id = id;
-            input.checked = checked;
-            input.addEventListener('change', () => {
-                updateCurrentParams();
-                if (!animationId) generateArt();
-                else needsUpdate = true;
-            });
-            controlItem.appendChild(labelElement);
-            controlItem.appendChild(input);
-            dynamicControls.appendChild(controlItem);
-        }
-
         function updateCurrentParams() {
             currentGenParams = {};
-            const type = generationType.value;
+            currentGenParams.patternStyle = patternStyle.value;
+            currentGenParams.scale = parseFloat(scale.value);
+            currentGenParams.intensity = parseFloat(intensity.value);
+            currentGenParams.mirrorX = mirrorX.checked;
+            currentGenParams.mirrorY = mirrorY.checked;
             const dynamicInputs = dynamicControls.querySelectorAll('input, select');
             dynamicInputs.forEach(input => {
-                if (input.type === 'checkbox') currentGenParams[input.id] = input.checked;
-                else if (input.type === 'range') currentGenParams[input.id] = parseFloat(input.value);
+                if (input.type === 'range') currentGenParams[input.id] = parseFloat(input.value);
+                else if (input.type === 'checkbox') currentGenParams[input.id] = input.checked;
                 else currentGenParams[input.id] = input.value;
             });
-            currentGenParams.type = type;
-            currentGenParams.complexity = parseInt(complexity.value);
             currentGenParams.colorScheme = colorScheme.value;
             currentGenParams.primaryColor = hexToRgb(primaryColor.value);
             currentGenParams.secondaryColor = hexToRgb(secondaryColor.value);
@@ -692,7 +609,7 @@
                     break;
             }
             updatePaletteDisplay();
-            if (!animationId) generateArt();
+            generateArt();
         }
 
         function updatePaletteDisplay() {
@@ -713,213 +630,91 @@
         function generateArt() {
             clearCanvas();
             updateCurrentParams();
-            switch (currentGenParams.type) {
-                case 'cellular': generateCellularAutomaton(); break;
-                case 'noise': generatePerlinNoise(); break;
-                case 'pattern': generatePattern(); break;
-                case 'mandala': generateMandala(); break;
-                case 'flow': generateFlowField(); break;
-                case 'bloom': generateBloom(); break;
-                case 'crystal': generateCrystalGrowth(); break;
-                case 'circuit': generateCircuitBoard(); break;
-                default: generatePerlinNoise(); break;
-            }
-            updateCanvas(); // Display the generated art
-            applyPostProcessing(); // Apply post-processing effects
-        }
-
-        function generateCellularAutomaton() {
-            const rule = currentGenParams.rule || 30;
-            const initialDensity = currentGenParams.initialDensity || 0.3;
-            const iterations = currentGenParams.iterations || 20;
-            let cells = new Array(CANVAS_SIZE).fill(0).map(() => Math.random() < initialDensity ? 1 : 0);
-            const ruleBinary = rule.toString(2).padStart(8, '0');
-            for (let y = 0; y < Math.min(iterations, CANVAS_SIZE); y++) {
-                for (let x = 0; x < CANVAS_SIZE; x++) {
-                    const value = cells[x];
-                    const colorIndex = Math.floor(value * (palette.length - 1));
-                    setPixel(x, y, palette[colorIndex] || palette[0]);
-                }
-                if (y < CANVAS_SIZE - 1) {
-                    const newCells = new Array(CANVAS_SIZE);
-                    for (let x = 0; x < CANVAS_SIZE; x++) {
-                        const left = cells[(x - 1 + CANVAS_SIZE) % CANVAS_SIZE];
-                        const center = cells[x];
-                        const right = cells[(x + 1) % CANVAS_SIZE];
-                        const pattern = (left << 2) | (center << 1) | right;
-                        newCells[x] = parseInt(ruleBinary[7 - pattern]);
+            generatePattern();
+            if (currentGenParams.mirrorX) {
+                for (let y = 0; y < CANVAS_SIZE; y++) {
+                    for (let x = 0; x < CANVAS_SIZE / 2; x++) {
+                        const leftColor = getPixel(x, y);
+                        setPixel(CANVAS_SIZE - 1 - x, y, leftColor);
                     }
-                    cells = newCells;
                 }
             }
-        }
-
-        function generatePerlinNoise() {
-            const scale = currentGenParams.scale || 0.03;
-            const octaves = currentGenParams.octaves || 4;
-            const persistence = currentGenParams.persistence || 0.5;
-            const lacunarity = currentGenParams.lacunarity || 2;
-            for (let y = 0; y < CANVAS_SIZE; y++) {
+            if (currentGenParams.mirrorY) {
                 for (let x = 0; x < CANVAS_SIZE; x++) {
-                    let total = 0, frequency = scale, amplitude = 1, maxValue = 0;
-                    for (let i = 0; i < octaves; i++) {
-                        total += Noise(x * frequency, y * frequency) * amplitude;
-                        maxValue += amplitude;
-                        amplitude *= persistence;
-                        frequency *= lacunarity;
+                    for (let y = 0; y < CANVAS_SIZE / 2; y++) {
+                        const topColor = getPixel(x, y);
+                        setPixel(x, CANVAS_SIZE - 1 - y, topColor);
                     }
-                    const value = (total / maxValue + 1) / 2;
-                    const colorIndex = Math.floor(value * (palette.length - 1));
-                    setPixel(x, y, palette[colorIndex] || palette[0]);
                 }
             }
+            updateCanvas();
+            applyPostProcessing();
         }
 
         function generatePattern() {
-            const patternType = currentGenParams.patternType || 'circles';
-            const density = currentGenParams.density || 8;
-            const variation = currentGenParams.variation || 0.5;
+            const style = currentGenParams.patternStyle;
+            const scale = currentGenParams.scale;
+            const intensity = currentGenParams.intensity;
             for (let y = 0; y < CANVAS_SIZE; y++) {
                 for (let x = 0; x < CANVAS_SIZE; x++) {
                     let value;
-                    switch (patternType) {
-                        case 'circles': value = Math.sin(Math.sqrt(x * x + y * y) * density * variation); break;
-                        case 'squares': value = Math.sin(x * density) * Math.cos(y * density); break;
-                        case 'triangles': value = Math.abs((x % density) - (y % density)) / density; break;
-                        case 'hexagons': value = Math.sin(x * density) + Math.cos(y * density); break;
-                        case 'stripes': value = Math.sin(x * density * variation); break;
-                        case 'grid': value = (x % density < 1 || y % density < 1) ? 1 : 0; break;
-                    }
-                    const colorIndex = Math.floor(((value + 1) / 2) * (palette.length - 1));
-                    setPixel(x, y, palette[colorIndex] || palette[0]);
-                }
-            }
-        }
-
-        function generateMandala() {
-            const segments = currentGenParams.segments || 8;
-            const layers = currentGenParams.layers || 5;
-            const detail = currentGenParams.complexity || 5;
-            const mirrorX = currentGenParams.mirrorX !== false;
-            const mirrorY = currentGenParams.mirrorY !== false;
-            for (let y = 0; y < CANVAS_SIZE / 2; y++) {
-                for (let x = 0; x < CANVAS_SIZE / 2; x++) {
-                    const dx = x - CANVAS_SIZE / 2, dy = y - CANVAS_SIZE / 2;
-                    const angle = Math.atan2(dy, dx) * segments;
-                    const radius = Math.sqrt(dx * dx + dy * dy);
-                    const value = Math.sin(radius * layers * 0.1 + angle * detail * 0.1);
-                    const colorIndex = Math.floor(((value + 1) / 2) * (palette.length - 1));
-                    const color = palette[colorIndex] || palette[0];
-                    setPixel(x, y, color);
-                    if (mirrorX) setPixel(CANVAS_SIZE - 1 - x, y, color);
-                    if (mirrorY) setPixel(x, CANVAS_SIZE - 1 - y, color);
-                    if (mirrorX && mirrorY) setPixel(CANVAS_SIZE - 1 - x, CANVAS_SIZE - 1 - y, color);
-                }
-            }
-        }
-
-        function generateFlowField() {
-            const noiseScale = currentGenParams.noiseScale || 0.02;
-            const flowStrength = currentGenParams.flowStrength || 1;
-            const particleCount = currentGenParams.particleCount || 100;
-            const particleLife = currentGenParams.particleLife || 50;
-            const particles = Array.from({ length: particleCount }, () => ({
-                x: Math.random() * CANVAS_SIZE, y: Math.random() * CANVAS_SIZE, life: particleLife
-            }));
-            for (let i = 0; i < particleLife; i++) {
-                particles.forEach(p => {
-                    if (p.life > 0) {
-                        const angle = Noise(p.x * noiseScale, p.y * noiseScale) * Math.PI * 2;
-                        p.x += Math.cos(angle) * flowStrength;
-                        p.y += Math.sin(angle) * flowStrength;
-                        p.life--;
-                        if (p.x >= 0 && p.x < CANVAS_SIZE && p.y >= 0 && p.y < CANVAS_SIZE) {
-                            const colorIndex = Math.floor((p.life / particleLife) * (palette.length - 1));
-                            setPixel(Math.floor(p.x), Math.floor(p.y), palette[colorIndex] || palette[0]);
-                        }
-                    }
-                });
-            }
-        }
-
-        function generateBloom() {
-            const seedCount = currentGenParams.seedCount || 5;
-            const bloomSize = currentGenParams.bloomSize || 20;
-            const fadeRate = currentGenParams.fadeRate || 0.5;
-            const seeds = Array.from({ length: seedCount }, () => ({
-                x: Math.random() * CANVAS_SIZE, y: Math.random() * CANVAS_SIZE
-            }));
-            for (let y = 0; y < CANVAS_SIZE; y++) {
-                for (let x = 0; x < CANVAS_SIZE; x++) {
-                    let total = 0;
-                    seeds.forEach(seed => {
-                        const dx = x - seed.x, dy = y - seed.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        total += Math.max(0, 1 - dist / bloomSize) * fadeRate;
-                    });
-                    const value = Math.min(1, total);
-                    const colorIndex = Math.floor(value * (palette.length - 1));
-                    setPixel(x, y, palette[colorIndex] || palette[0]);
-                }
-            }
-        }
-
-        function generateCrystalGrowth() {
-            const seedCount = currentGenParams.seedCount || 3;
-            const growthRate = currentGenParams.growthRate || 0.1;
-            const maxIterations = currentGenParams.maxIterations || 100;
-            const seeds = Array.from({ length: seedCount }, () => ({
-                x: Math.floor(Math.random() * CANVAS_SIZE), y: Math.floor(Math.random() * CANVAS_SIZE)
-            }));
-            const grid = new Uint8Array(CANVAS_SIZE * CANVAS_SIZE);
-            seeds.forEach(seed => grid[seed.y * CANVAS_SIZE + seed.x] = 1);
-            for (let i = 0; i < maxIterations; i++) {
-                for (let y = 0; y < CANVAS_SIZE; y++) {
-                    for (let x = 0; x < CANVAS_SIZE; x++) {
-                        if (grid[y * CANVAS_SIZE + x] === 0) {
-                            const neighbors = [
-                                grid[((y - 1 + CANVAS_SIZE) % CANVAS_SIZE) * CANVAS_SIZE + x],
-                                grid[((y + 1) % CANVAS_SIZE) * CANVAS_SIZE + x],
-                                grid[y * CANVAS_SIZE + ((x - 1 + CANVAS_SIZE) % CANVAS_SIZE)],
-                                grid[y * CANVAS_SIZE + ((x + 1) % CANVAS_SIZE)]
-                            ].filter(n => n > 0).length;
-                            if (neighbors > 0 && Math.random() < growthRate) {
-                                grid[y * CANVAS_SIZE + x] = 1;
+                    switch (style) {
+                        case 'circles':
+                            const rings = currentGenParams.rings || 5;
+                            const thickness = currentGenParams.thickness || 0.5;
+                            const centerX = CANVAS_SIZE / 2;
+                            const centerY = CANVAS_SIZE / 2;
+                            const dx = x - centerX;
+                            const dy = y - centerY;
+                            const r = Math.sqrt(dx * dx + dy * dy);
+                            const ringWidth = (CANVAS_SIZE / 2) / rings * scale;
+                            const positionInRing = (r % ringWidth) / ringWidth;
+                            value = positionInRing < thickness ? 1 : 0;
+                            value *= intensity;
+                            break;
+                        case 'squares':
+                            const rotation = (currentGenParams.rotation || 0) * Math.PI / 180;
+                            const sizeVariation = currentGenParams.sizeVariation || 0.5;
+                            const xRot = Math.cos(rotation) * x - Math.sin(rotation) * y;
+                            const yRot = Math.sin(rotation) * x + Math.cos(rotation) * y;
+                            value = Math.sin(xRot * scale) * Math.cos(yRot * scale);
+                            value = (value + 1) / 2 * (1 + sizeVariation * Math.sin(xRot + yRot));
+                            value *= intensity;
+                            break;
+                        case 'stripes':
+                            const direction = currentGenParams.direction || 'horizontal';
+                            const stripeWidth = (currentGenParams.stripeWidth || 5) / scale;
+                            let a, b;
+                            switch (direction) {
+                                case 'horizontal': a = 0; b = 1; break;
+                                case 'vertical': a = 1; b = 0; break;
+                                case 'diagonalLeft': a = 1; b = 1; break;
+                                case 'diagonalRight': a = 1; b = -1; break;
                             }
-                        }
+                            const pos = (a * x + b * y) / stripeWidth;
+                            value = (Math.floor(pos) % 2 === 0) ? 1 : 0;
+                            value *= intensity;
+                            break;
+                        case 'triangles':
+                            const triDensity = (currentGenParams.density || 8) / scale;
+                            value = Math.abs((x % triDensity) - (y % triDensity)) / triDensity;
+                            value *= intensity;
+                            break;
+                        case 'hexagons':
+                            const hexDensity = (currentGenParams.density || 8) / scale;
+                            value = Math.sin(x * hexDensity) + Math.cos(y * hexDensity);
+                            value = (value + 2) / 4;
+                            value *= intensity;
+                            break;
+                        case 'grid':
+                            const gridSize = (currentGenParams.gridSize || 8) / scale;
+                            value = (x % gridSize < 1 || y % gridSize < 1) ? 1 : 0;
+                            value *= intensity;
+                            break;
                     }
-                }
-            }
-            for (let y = 0; y < CANVAS_SIZE; y++) {
-                for (let x = 0; x < CANVAS_SIZE; x++) {
-                    const value = grid[y * CANVAS_SIZE + x];
                     const colorIndex = Math.floor(value * (palette.length - 1));
                     setPixel(x, y, palette[colorIndex] || palette[0]);
                 }
-            }
-        }
-
-        function generateCircuitBoard() {
-            const components = currentGenParams.components || 20;
-            const maxBranches = currentGenParams.maxBranches || 4;
-            const branchProb = currentGenParams.branchProb || 0.4;
-            const visited = new Uint8Array(CANVAS_SIZE * CANVAS_SIZE);
-            function drawLine(x, y, dx, dy, steps) {
-                for (let i = 0; i < steps && x >= 0 && x < CANVAS_SIZE && y >= 0 && y < CANVAS_SIZE; i++) {
-                    visited[y * CANVAS_SIZE + x] = 1;
-                    setPixel(x, y, palette[Math.floor(Math.random() * palette.length)]);
-                    x += dx; y += dy;
-                    if (Math.random() < branchProb && maxBranches > 0) {
-                        const newDir = Math.random() < 0.5 ? [1, 0] : [0, 1];
-                        drawLine(x, y, newDir[0], newDir[1], Math.floor(Math.random() * 10));
-                    }
-                }
-            }
-            for (let i = 0; i < components; i++) {
-                const x = Math.floor(Math.random() * CANVAS_SIZE);
-                const y = Math.floor(Math.random() * CANVAS_SIZE);
-                const dir = Math.random() < 0.5 ? [1, 0] : [0, 1];
-                drawLine(x, y, dir[0], dir[1], Math.floor(Math.random() * 20));
             }
         }
 
@@ -930,14 +725,12 @@
             const p = parseInt(pixelate.value);
             const c = parseFloat(contrast.value);
             const br = parseFloat(brightness.value);
-            // Brightness and Contrast
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, Math.max(0, (data[i] - 128) * c + 128 * br));
                 data[i + 1] = Math.min(255, Math.max(0, (data[i + 1] - 128) * c + 128 * br));
                 data[i + 2] = Math.min(255, Math.max(0, (data[i + 2] - 128) * c + 128 * br));
             }
             ctx.putImageData(imageData, 0, 0);
-            // Pixelate
             if (p > 1) {
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = CANVAS_SIZE / p;
@@ -947,31 +740,22 @@
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(tempCanvas, 0, 0, CANVAS_SIZE / p, CANVAS_SIZE / p, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
-            // Blur (simple approximation)
             if (b > 0) ctx.filter = `blur(${b}px)`;
             else ctx.filter = 'none';
             ctx.drawImage(canvas, 0, 0);
         }
 
-        function animate() {
-            if (needsUpdate) {
-                generateArt();
-                needsUpdate = false;
-            }
-            animationId = requestAnimationFrame(animate);
-        }
-
         function randomizeAll() {
-            complexity.value = Math.floor(Math.random() * 10) + 1;
+            scale.value = (Math.random() * 9.9 + 0.1).toFixed(1);
+            intensity.value = (Math.random() * 1).toFixed(1);
             primaryColor.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
             secondaryColor.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
             generatePalette();
-            generateArt();
         }
 
         function saveImage() {
             const link = document.createElement('a');
-            link.download = 'pixel-art.png';
+            link.download = 'pixel-art-pattern.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
