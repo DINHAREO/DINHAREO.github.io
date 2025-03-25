@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Art Pattern Generator</title>
+    <title>Pixel Art Hexagon Generator</title>
     <style>
         :root {
             --primary: #6b46c1;
@@ -194,7 +194,7 @@
     <header>
         <a href="../creative.html" class="back-button">← Back</a>
         <div class="header-content">
-            <h1>Pixel Art Pattern Generator</h1>
+            <h1>Pixel Art Hexagon Generator</h1>
         </div>
         <div style="width: 80px;"></div> <!-- Spacer for centering -->
     </header>
@@ -207,19 +207,8 @@
 
             <div class="controls">
                 <div class="control-section">
-                    <h3>Pattern</h3>
+                    <h3>Hexagon Settings</h3>
                     <div class="control-grid">
-                        <div class="control-item full-width">
-                            <label for="patternStyle">Style</label>
-                            <select id="patternStyle">
-                                <option value="circles">Circles</option>
-                                <option value="squares">Squares</option>
-                                <option value="stripes">Stripes</option>
-                                <option value="triangles">Triangles</option>
-                                <option value="hexagons">Hexagons</option>
-                                <option value="grid">Grid</option>
-                            </select>
-                        </div>
                         <div class="control-item">
                             <label for="scale">Scale</label>
                             <input type="range" id="scale" min="0.1" max="10" value="1" step="0.1">
@@ -227,6 +216,14 @@
                         <div class="control-item">
                             <label for="intensity">Intensity</label>
                             <input type="range" id="intensity" min="0" max="1" value="0.5" step="0.1">
+                        </div>
+                        <div class="control-item">
+                            <label for="density">Density</label>
+                            <input type="range" id="density" min="1" max="32" value="8" step="1">
+                        </div>
+                        <div class="control-item">
+                            <label for="rotation">Rotation</label>
+                            <input type="range" id="rotation" min="0" max="360" value="0" step="1">
                         </div>
                     </div>
                 </div>
@@ -242,13 +239,6 @@
                             <label for="mirrorY">Mirror Vertically</label>
                             <input type="checkbox" id="mirrorY" checked>
                         </div>
-                    </div>
-                </div>
-
-                <div class="control-section">
-                    <h3>Style Parameters</h3>
-                    <div class="control-grid" id="dynamicControls">
-                        <!-- Dynamic controls will be added here -->
                     </div>
                 </div>
 
@@ -327,16 +317,16 @@
         const generateBtn = document.getElementById('generateBtn');
         const randomizeBtn = document.getElementById('randomizeBtn');
         const saveBtn = document.getElementById('saveBtn');
-        const patternStyle = document.getElementById('patternStyle');
         const scale = document.getElementById('scale');
         const intensity = document.getElementById('intensity');
+        const density = document.getElementById('density');
+        const rotation = document.getElementById('rotation');
         const mirrorX = document.getElementById('mirrorX');
         const mirrorY = document.getElementById('mirrorY');
         const primaryColor = document.getElementById('primaryColor');
         const secondaryColor = document.getElementById('secondaryColor');
         const colorScheme = document.getElementById('colorScheme');
         const colorPalette = document.getElementById('colorPalette');
-        const dynamicControls = document.getElementById('dynamicControls');
         const blur = document.getElementById('blur');
         const pixelate = document.getElementById('pixelate');
         const contrast = document.getElementById('contrast');
@@ -418,7 +408,6 @@
         function init() {
             clearCanvas();
             setupEventListeners();
-            updateDynamicControls();
             generatePalette();
             generateArt();
         }
@@ -438,11 +427,7 @@
             generateBtn.addEventListener('click', generateArt);
             randomizeBtn.addEventListener('click', randomizeAll);
             saveBtn.addEventListener('click', saveImage);
-            patternStyle.addEventListener('change', () => {
-                updateDynamicControls();
-                generateArt();
-            });
-            [scale, intensity, mirrorX, mirrorY].forEach(control => {
+            [scale, intensity, density, rotation, mirrorX, mirrorY].forEach(control => {
                 control.addEventListener('input', generateArt);
             });
             [colorScheme, primaryColor, secondaryColor].forEach(control => {
@@ -453,95 +438,18 @@
             });
         }
 
-        // Generate dynamic controls
-        function updateDynamicControls() {
-            dynamicControls.innerHTML = '';
-            const style = patternStyle.value;
-            switch (style) {
-                case 'circles':
-                    addRangeControl('rings', 'Number of Rings', 1, 20, 5, 1);
-                    addRangeControl('thickness', 'Ring Thickness', 0, 1, 0.5, 0.1);
-                    break;
-                case 'squares':
-                    addRangeControl('rotation', 'Rotation', 0, 360, 0, 1);
-                    addRangeControl('sizeVariation', 'Size Variation', 0, 1, 0.5, 0.1);
-                    break;
-                case 'stripes':
-                    addSelectControl('direction', 'Direction', [
-                        { value: 'horizontal', text: 'Horizontal' },
-                        { value: 'vertical', text: 'Vertical' },
-                        { value: 'diagonalLeft', text: 'Diagonal Left' },
-                        { value: 'diagonalRight', text: 'Diagonal Right' }
-                    ]);
-                    addRangeControl('stripeWidth', 'Stripe Width', 1, 20, 5, 1);
-                    break;
-                case 'triangles':
-                    addRangeControl('density', 'Density', 1, 32, 8, 1);
-                    break;
-                case 'hexagons':
-                    addRangeControl('density', 'Density', 1, 32, 8, 1);
-                    break;
-                case 'grid':
-                    addRangeControl('gridSize', 'Grid Size', 1, 32, 8, 1);
-                    break;
-            }
-        }
-
-        function addRangeControl(id, label, min, max, value, step = 1) {
-            const controlItem = document.createElement('div');
-            controlItem.className = 'control-item';
-            const labelElement = document.createElement('label');
-            labelElement.setAttribute('for', id);
-            labelElement.textContent = label;
-            const input = document.createElement('input');
-            input.type = 'range';
-            input.id = id;
-            input.min = min;
-            input.max = max;
-            input.value = value;
-            input.step = step;
-            input.addEventListener('input', generateArt);
-            controlItem.appendChild(labelElement);
-            controlItem.appendChild(input);
-            dynamicControls.appendChild(controlItem);
-        }
-
-        function addSelectControl(id, label, options) {
-            const controlItem = document.createElement('div');
-            controlItem.className = 'control-item';
-            const labelElement = document.createElement('label');
-            labelElement.setAttribute('for', id);
-            labelElement.textContent = label;
-            const select = document.createElement('select');
-            select.id = id;
-            options.forEach(option => {
-                const optionElement = document.createElement('option');
-                optionElement.value = option.value;
-                optionElement.textContent = option.text;
-                select.appendChild(optionElement);
-            });
-            select.addEventListener('change', generateArt);
-            controlItem.appendChild(labelElement);
-            controlItem.appendChild(select);
-            dynamicControls.appendChild(controlItem);
-        }
-
         function updateCurrentParams() {
-            currentGenParams = {};
-            currentGenParams.patternStyle = patternStyle.value;
-            currentGenParams.scale = parseFloat(scale.value);
-            currentGenParams.intensity = parseFloat(intensity.value);
-            currentGenParams.mirrorX = mirrorX.checked;
-            currentGenParams.mirrorY = mirrorY.checked;
-            const dynamicInputs = dynamicControls.querySelectorAll('input, select');
-            dynamicInputs.forEach(input => {
-                if (input.type === 'range') currentGenParams[input.id] = parseFloat(input.value);
-                else if (input.type === 'checkbox') currentGenParams[input.id] = input.checked;
-                else currentGenParams[input.id] = input.value;
-            });
-            currentGenParams.colorScheme = colorScheme.value;
-            currentGenParams.primaryColor = hexToRgb(primaryColor.value);
-            currentGenParams.secondaryColor = hexToRgb(secondaryColor.value);
+            currentGenParams = {
+                scale: parseFloat(scale.value),
+                intensity: parseFloat(intensity.value),
+                density: parseFloat(density.value),
+                rotation: parseFloat(rotation.value) * Math.PI / 180, // Convert to radians
+                mirrorX: mirrorX.checked,
+                mirrorY: mirrorY.checked,
+                colorScheme: colorScheme.value,
+                primaryColor: hexToRgb(primaryColor.value),
+                secondaryColor: hexToRgb(secondaryColor.value)
+            };
         }
 
         function generatePalette() {
@@ -630,7 +538,7 @@
         function generateArt() {
             clearCanvas();
             updateCurrentParams();
-            generatePattern();
+            generateHexagonPattern();
             if (currentGenParams.mirrorX) {
                 for (let y = 0; y < CANVAS_SIZE; y++) {
                     for (let x = 0; x < CANVAS_SIZE / 2; x++) {
@@ -651,68 +559,20 @@
             applyPostProcessing();
         }
 
-        function generatePattern() {
-            const style = currentGenParams.patternStyle;
+        function generateHexagonPattern() {
             const scale = currentGenParams.scale;
             const intensity = currentGenParams.intensity;
+            const density = currentGenParams.density / scale;
+            const rotation = currentGenParams.rotation;
             for (let y = 0; y < CANVAS_SIZE; y++) {
                 for (let x = 0; x < CANVAS_SIZE; x++) {
-                    let value;
-                    switch (style) {
-                        case 'circles':
-                            const rings = currentGenParams.rings || 5;
-                            const thickness = currentGenParams.thickness || 0.5;
-                            const centerX = CANVAS_SIZE / 2;
-                            const centerY = CANVAS_SIZE / 2;
-                            const dx = x - centerX;
-                            const dy = y - centerY;
-                            const r = Math.sqrt(dx * dx + dy * dy);
-                            const ringWidth = (CANVAS_SIZE / 2) / rings * scale;
-                            const positionInRing = (r % ringWidth) / ringWidth;
-                            value = positionInRing < thickness ? 1 : 0;
-                            value *= intensity;
-                            break;
-                        case 'squares':
-                            const rotation = (currentGenParams.rotation || 0) * Math.PI / 180;
-                            const sizeVariation = currentGenParams.sizeVariation || 0.5;
-                            const xRot = Math.cos(rotation) * x - Math.sin(rotation) * y;
-                            const yRot = Math.sin(rotation) * x + Math.cos(rotation) * y;
-                            value = Math.sin(xRot * scale) * Math.cos(yRot * scale);
-                            value = (value + 1) / 2 * (1 + sizeVariation * Math.sin(xRot + yRot));
-                            value *= intensity;
-                            break;
-                        case 'stripes':
-                            const direction = currentGenParams.direction || 'horizontal';
-                            const stripeWidth = (currentGenParams.stripeWidth || 5) / scale;
-                            let a, b;
-                            switch (direction) {
-                                case 'horizontal': a = 0; b = 1; break;
-                                case 'vertical': a = 1; b = 0; break;
-                                case 'diagonalLeft': a = 1; b = 1; break;
-                                case 'diagonalRight': a = 1; b = -1; break;
-                            }
-                            const pos = (a * x + b * y) / stripeWidth;
-                            value = (Math.floor(pos) % 2 === 0) ? 1 : 0;
-                            value *= intensity;
-                            break;
-                        case 'triangles':
-                            const triDensity = (currentGenParams.density || 8) / scale;
-                            value = Math.abs((x % triDensity) - (y % triDensity)) / triDensity;
-                            value *= intensity;
-                            break;
-                        case 'hexagons':
-                            const hexDensity = (currentGenParams.density || 8) / scale;
-                            value = Math.sin(x * hexDensity) + Math.cos(y * hexDensity);
-                            value = (value + 2) / 4;
-                            value *= intensity;
-                            break;
-                        case 'grid':
-                            const gridSize = (currentGenParams.gridSize || 8) / scale;
-                            value = (x % gridSize < 1 || y % gridSize < 1) ? 1 : 0;
-                            value *= intensity;
-                            break;
-                    }
-                    const colorIndex = Math.floor(value * (palette.length - 1));
+                    // Rotate coordinates
+                    const xRot = Math.cos(rotation) * (x - CANVAS_SIZE / 2) - Math.sin(rotation) * (y - CANVAS_SIZE / 2) + CANVAS_SIZE / 2;
+                    const yRot = Math.sin(rotation) * (x - CANVAS_SIZE / 2) + Math.cos(rotation) * (y - CANVAS_SIZE / 2) + CANVAS_SIZE / 2;
+                    // Hexagon pattern using sine and cosine
+                    const value = Math.sin(xRot * density) + Math.cos(yRot * density);
+                    const normalizedValue = (value + 2) / 4 * intensity;
+                    const colorIndex = Math.floor(normalizedValue * (palette.length - 1));
                     setPixel(x, y, palette[colorIndex] || palette[0]);
                 }
             }
@@ -727,7 +587,7 @@
             const br = parseFloat(brightness.value);
             for (let i = 0; i < data.length; i += 4) {
                 data[i] = Math.min(255, Math.max(0, (data[i] - 128) * c + 128 * br));
-                data[i + 1] = Math.min(255, Math.max(0, (data[i + 1] - 128) * c + 128 * br));
+                data[i + 1] = Math.min(255, Math.max(0, (data[i + 1) - 128) * c + 128 * br));
                 data[i + 2] = Math.min(255, Math.max(0, (data[i + 2] - 128) * c + 128 * br));
             }
             ctx.putImageData(imageData, 0, 0);
@@ -748,6 +608,8 @@
         function randomizeAll() {
             scale.value = (Math.random() * 9.9 + 0.1).toFixed(1);
             intensity.value = (Math.random() * 1).toFixed(1);
+            density.value = Math.floor(Math.random() * 32) + 1;
+            rotation.value = Math.floor(Math.random() * 361);
             primaryColor.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
             secondaryColor.value = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
             generatePalette();
@@ -755,7 +617,7 @@
 
         function saveImage() {
             const link = document.createElement('a');
-            link.download = 'pixel-art-pattern.png';
+            link.download = 'hexagon-art.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
