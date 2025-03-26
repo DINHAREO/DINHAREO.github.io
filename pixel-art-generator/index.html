@@ -93,17 +93,12 @@
             width: 512px;
             height: 512px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
             animation: blink 2s infinite alternate;
         }
 
         @keyframes blink {
             0% { opacity: 1; }
             100% { opacity: 0.5; }
-        }
-
-        .canvas-container:hover {
-            transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
         }
 
         #pixelCanvas {
@@ -117,12 +112,19 @@
             background-color: var(--panel);
             border-radius: 8px;
             padding: 1rem;
-            width: 320px;
+            width: 100%;
+            max-width: 1200px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 1rem;
         }
 
         .control-section {
             margin-bottom: 1.5rem;
+            flex: 1;
+            min-width: 200px;
         }
 
         .control-section h3 {
