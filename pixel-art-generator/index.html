@@ -93,12 +93,6 @@
             width: 512px;
             height: 512px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            animation: blink 2s infinite alternate;
-        }
-
-        @keyframes blink {
-            0% { opacity: 1; }
-            100% { opacity: 0.5; }
         }
 
         #pixelCanvas {
@@ -350,8 +344,8 @@
                             <input type="range" id="animationSpeed" min="0" max="5" value="1" step="0.1">
                         </div>
                         <div class="control-item">
-                            <label for="blinkEffect">Blink Effect</label>
-                            <input type="checkbox" id="blinkEffect" checked>
+                            <label for="strobeEffect">Strobe Effect</label>
+                            <input type="checkbox" id="strobeEffect" checked>
                         </div>
                     </div>
                 </div>
@@ -391,7 +385,7 @@
         const contrast = document.getElementById('contrast');
         const brightness = document.getElementById('brightness');
         const animationSpeed = document.getElementById('animationSpeed');
-        const blinkEffect = document.getElementById('blinkEffect');
+        const strobeEffect = document.getElementById('strobeEffect');
 
         // Global variables
         let pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
@@ -517,7 +511,7 @@
                 control.addEventListener('input', applyPostProcessing);
             });
             animationSpeed.addEventListener('input', updateAnimation);
-            blinkEffect.addEventListener('change', toggleBlinkEffect);
+            strobeEffect.addEventListener('change', toggleStrobeEffect);
         }
 
         // Generate high contrast colors
@@ -788,13 +782,36 @@
             animationFrameId = requestAnimationFrame(() => animateArt(speed));
         }
 
-        function toggleBlinkEffect() {
-            const container = document.querySelector('.canvas-container');
-            if (blinkEffect.checked) {
-                container.style.animation = 'blink 2s infinite alternate';
+        function toggleStrobeEffect() {
+            if (strobeEffect.checked) {
+                startStrobeEffect();
             } else {
-                container.style.animation = 'none';
+                stopStrobeEffect();
             }
+        }
+
+        function startStrobeEffect() {
+            const strobeInterval = setInterval(() => {
+                for (let i = 0; i < 10; i++) {
+                    const x = Math.floor(Math.random() * CANVAS_SIZE);
+                    const y = Math.floor(Math.random() * CANVAS_SIZE);
+                    const color = getPixel(x, y);
+                    const strobeColor = {
+                        r: 255 - color.r,
+                        g: 255 - color.g,
+                        b: 255 - color.b
+                    };
+                    setPixel(x, y, strobeColor);
+                }
+                updateCanvas();
+            }, 100);
+
+            strobeEffect.dataset.interval = strobeInterval;
+        }
+
+        function stopStrobeEffect() {
+            clearInterval(strobeEffect.dataset.interval);
+            generateArt();
         }
 
         // Start the application
