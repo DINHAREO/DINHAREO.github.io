@@ -95,6 +95,12 @@
             height: 512px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
+            animation: blink 2s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
 
         .canvas-container:hover {
@@ -335,6 +341,20 @@
                     </div>
                 </div>
 
+                <div class="control-section">
+                    <h3>Animation</h3>
+                    <div class="control-grid">
+                        <div class="control-item">
+                            <label for="animationSpeed">Animation Speed</label>
+                            <input type="range" id="animationSpeed" min="0" max="5" value="1" step="0.1">
+                        </div>
+                        <div class="control-item">
+                            <label for="blinkEffect">Blink Effect</label>
+                            <input type="checkbox" id="blinkEffect" checked>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="action-buttons">
                     <button id="generateBtn">Generate</button>
                     <button id="randomizeBtn">Randomize All</button>
@@ -369,11 +389,14 @@
         const pixelate = document.getElementById('pixelate');
         const contrast = document.getElementById('contrast');
         const brightness = document.getElementById('brightness');
+        const animationSpeed = document.getElementById('animationSpeed');
+        const blinkEffect = document.getElementById('blinkEffect');
 
         // Global variables
         let pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
         let palette = [];
         let currentGenParams = {};
+        let animationFrameId;
 
         // Utility Functions
         function hexToRgb(hex) {
@@ -492,6 +515,8 @@
             [blur, pixelate, contrast, brightness].forEach(control => {
                 control.addEventListener('input', applyPostProcessing);
             });
+            animationSpeed.addEventListener('input', updateAnimation);
+            blinkEffect.addEventListener('change', toggleBlinkEffect);
         }
 
         // Generate high contrast colors
@@ -745,6 +770,30 @@
             link.download = 'hexagon-art.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+        }
+
+        function updateAnimation() {
+            const speed = parseFloat(animationSpeed.value);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            animateArt(speed);
+        }
+
+        function animateArt(speed) {
+            const step = speed * 0.01;
+            currentGenParams.rotation += step;
+            generateArt();
+            animationFrameId = requestAnimationFrame(() => animateArt(speed));
+        }
+
+        function toggleBlinkEffect() {
+            const container = document.querySelector('.canvas-container');
+            if (blinkEffect.checked) {
+                container.style.animation = 'blink 2s infinite alternate';
+            } else {
+                container.style.animation = 'none';
+            }
         }
 
         // Start the application
