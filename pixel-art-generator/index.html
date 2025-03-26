@@ -315,37 +315,15 @@
                 </div>
 
                 <div class="control-section">
-                    <h3>Post-Processing</h3>
-                    <div class="control-grid">
-                        <div class="control-item">
-                            <label for="blur">Blur</label>
-                            <input type="range" id="blur" min="0" max="5" value="0" step="0.1">
-                        </div>
-                        <div class="control-item">
-                            <label for="pixelate">Pixelate</label>
-                            <input type="range" id="pixelate" min="1" max="8" value="1" step="1">
-                        </div>
-                        <div class="control-item">
-                            <label for="contrast">Contrast</label>
-                            <input type="range" id="contrast" min="0.5" max="2" value="1" step="0.1">
-                        </div>
-                        <div class="control-item">
-                            <label for="brightness">Brightness</label>
-                            <input type="range" id="brightness" min="0.5" max="1.5" value="1" step="0.1">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="control-section">
                     <h3>Animation</h3>
                     <div class="control-grid">
                         <div class="control-item">
-                            <label for="animationSpeed">Animation Speed</label>
-                            <input type="range" id="animationSpeed" min="0" max="5" value="1" step="0.1">
+                            <label for="particleEffect">Particle Effect</label>
+                            <input type="checkbox" id="particleEffect" checked>
                         </div>
                         <div class="control-item">
-                            <label for="strobeEffect">Strobe Effect</label>
-                            <input type="checkbox" id="strobeEffect" checked>
+                            <label for="waveEffect">Wave Effect</label>
+                            <input type="checkbox" id="waveEffect" checked>
                         </div>
                     </div>
                 </div>
@@ -380,17 +358,14 @@
         const secondaryColor = document.getElementById('secondaryColor');
         const colorScheme = document.getElementById('colorScheme');
         const colorPalette = document.getElementById('colorPalette');
-        const blur = document.getElementById('blur');
-        const pixelate = document.getElementById('pixelate');
-        const contrast = document.getElementById('contrast');
-        const brightness = document.getElementById('brightness');
-        const animationSpeed = document.getElementById('animationSpeed');
-        const strobeEffect = document.getElementById('strobeEffect');
+        const particleEffect = document.getElementById('particleEffect');
+        const waveEffect = document.getElementById('waveEffect');
 
         // Global variables
         let pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
         let palette = [];
         let currentGenParams = {};
+        let particles = [];
         let animationFrameId;
 
         // Utility Functions
@@ -478,6 +453,8 @@
             setupEventListeners();
             generatePalette();
             generateArt();
+            if (particleEffect.checked) startParticleEffect();
+            if (waveEffect.checked) startWaveEffect();
         }
 
         // Clear the canvas
@@ -507,11 +484,8 @@
                     generateArt();
                 });
             });
-            [blur, pixelate, contrast, brightness].forEach(control => {
-                control.addEventListener('input', applyPostProcessing);
-            });
-            animationSpeed.addEventListener('input', updateAnimation);
-            strobeEffect.addEventListener('change', toggleStrobeEffect);
+            particleEffect.addEventListener('change', toggleParticleEffect);
+            waveEffect.addEventListener('change', toggleWaveEffect);
         }
 
         // Generate high contrast colors
@@ -649,7 +623,6 @@
             }
             
             updateCanvas();
-            applyPostProcessing();
         }
 
         function updateCurrentParams() {
@@ -690,53 +663,6 @@
             }
         }
 
-        function applyPostProcessing() {
-            const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            const data = imageData.data;
-            const b = parseFloat(blur.value);
-            const p = parseInt(pixelate.value);
-            const c = parseFloat(contrast.value);
-            const br = parseFloat(brightness.value);
-
-            // Apply contrast and brightness
-            for (let i = 0; i < data.length; i += 4) {
-                for (let j = 0; j < 3; j++) {
-                    let value = data[i + j];
-                    value = ((value / 255 - 0.5) * c + 0.5) * 255;
-                    value = value * br;
-                    data[i + j] = Math.max(0, Math.min(255, value));
-                }
-            }
-            ctx.putImageData(imageData, 0, 0);
-
-            // Apply pixelation
-            if (p > 1) {
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = CANVAS_SIZE;
-                tempCanvas.height = CANVAS_SIZE;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(canvas, 0, 0);
-                
-                ctx.imageSmoothingEnabled = false;
-                ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-                ctx.drawImage(canvas, 0, 0, CANVAS_SIZE/p, CANVAS_SIZE/p);
-                ctx.drawImage(canvas, 0, 0, CANVAS_SIZE/p, CANVAS_SIZE/p, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            }
-
-            // Apply blur
-            if (b > 0) {
-                ctx.filter = `blur(${b}px)`;
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = CANVAS_SIZE;
-                tempCanvas.height = CANVAS_SIZE;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(canvas, 0, 0);
-                ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-                ctx.drawImage(tempCanvas, 0, 0);
-                ctx.filter = 'none';
-            }
-        }
-
         function randomizeAll() {
             scale.value = (Math.random() * 9.9 + 0.1).toFixed(1);
             intensity.value = (Math.random() * 0.6 + 0.4).toFixed(1);
@@ -767,50 +693,83 @@
             link.click();
         }
 
-        function updateAnimation() {
-            const speed = parseFloat(animationSpeed.value);
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            animateArt(speed);
-        }
-
-        function animateArt(speed) {
-            const step = speed * 0.01;
-            currentGenParams.rotation += step;
-            generateArt();
-            animationFrameId = requestAnimationFrame(() => animateArt(speed));
-        }
-
-        function toggleStrobeEffect() {
-            if (strobeEffect.checked) {
-                startStrobeEffect();
+        function toggleParticleEffect() {
+            if (particleEffect.checked) {
+                startParticleEffect();
             } else {
-                stopStrobeEffect();
+                stopParticleEffect();
             }
         }
 
-        function startStrobeEffect() {
-            const strobeInterval = setInterval(() => {
-                for (let i = 0; i < 10; i++) {
-                    const x = Math.floor(Math.random() * CANVAS_SIZE);
-                    const y = Math.floor(Math.random() * CANVAS_SIZE);
-                    const color = getPixel(x, y);
-                    const strobeColor = {
-                        r: 255 - color.r,
-                        g: 255 - color.g,
-                        b: 255 - color.b
-                    };
-                    setPixel(x, y, strobeColor);
+        function startParticleEffect() {
+            particles = Array.from({ length: 50 }, () => ({
+                x: Math.random() * CANVAS_SIZE,
+                y: Math.random() * CANVAS_SIZE,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                color: palette[Math.floor(Math.random() * palette.length)]
+            }));
+
+            function animateParticles() {
+                clearCanvas();
+                generateArt();
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x >= CANVAS_SIZE) p.vx *= -1;
+                    if (p.y < 0 || p.y >= CANVAS_SIZE) p.vy *= -1;
+
+                    setPixel(Math.floor(p.x), Math.floor(p.y), p.color);
+                });
+                updateCanvas();
+                animationFrameId = requestAnimationFrame(animateParticles);
+            }
+
+            animateParticles();
+        }
+
+        function stopParticleEffect() {
+            cancelAnimationFrame(animationFrameId);
+            generateArt();
+        }
+
+        function toggleWaveEffect() {
+            if (waveEffect.checked) {
+                startWaveEffect();
+            } else {
+                stopWaveEffect();
+            }
+        }
+
+        function startWaveEffect() {
+            let time = 0;
+
+            function animateWaves() {
+                clearCanvas();
+                generateArt();
+                const waveAmplitude = 5;
+                const waveFrequency = 0.1;
+                const waveSpeed = 0.05;
+
+                for (let y = 0; y < CANVAS_SIZE; y++) {
+                    for (let x = 0; x < CANVAS_SIZE; x++) {
+                        const offset = Math.sin((x + time) * waveFrequency) * waveAmplitude;
+                        const yOffset = Math.floor(y + offset) % CANVAS_SIZE;
+                        const color = getPixel(x, yOffset);
+                        setPixel(x, y, color);
+                    }
                 }
                 updateCanvas();
-            }, 100);
+                time += waveSpeed;
+                animationFrameId = requestAnimationFrame(animateWaves);
+            }
 
-            strobeEffect.dataset.interval = strobeInterval;
+            animateWaves();
         }
 
-        function stopStrobeEffect() {
-            clearInterval(strobeEffect.dataset.interval);
+        function stopWaveEffect() {
+            cancelAnimationFrame(animationFrameId);
             generateArt();
         }
 
