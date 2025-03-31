@@ -241,4 +241,49 @@ export class Vector2 {
     static sub(v1, v2) {
         return new Vector2(v1.x - v2.x, v1.y - v2.y);
     }
-} 
+}
+
+// Add to your script
+// Basic canvas test
+const canvas = document.getElementById('reactionCanvas');
+const ctx = canvas.getContext('2d');
+
+// Set canvas size
+function resizeCanvas() {
+    const container = canvas.parentElement;
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+    
+    // Draw a test pattern
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#00A896');
+    gradient.addColorStop(1, '#02C39A');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#F0F3BD';
+    ctx.font = '20px VT323';
+    ctx.fillText('Canvas initialized', 20, 30);
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// Add to your inline script in index.html
+// Update slider displays
+document.getElementById('complexity').addEventListener('input', function() {
+    document.getElementById('complexityValue').textContent = this.value;
+});
+
+document.getElementById('feedRate').addEventListener('input', function() {
+    document.getElementById('feedRateValue').textContent = parseFloat(this.value).toFixed(4);
+});
+
+document.getElementById('killRate').addEventListener('input', function() {
+    document.getElementById('killRateValue').textContent = parseFloat(this.value).toFixed(4);
+});
+
+document.getElementById('timeStep').addEventListener('input', function() {
+    document.getElementById('timeStepValue').textContent = parseFloat(this.value).toFixed(1);
+}); 
