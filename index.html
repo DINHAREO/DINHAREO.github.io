@@ -2,541 +2,573 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reaction-Diffusion System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lunar Labyrinth - Coming Soon</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6b46c1;
-            --secondary: #4c1d95;
-            --accent: #f472b6;
-            --bg: #999999;
-            --desktop: #777777;
-            --window-bg: #dddddd;
-            --window-border: #bbbbbb;
-            --window-header: #4c4c99;
-            --btn-face: #c0c0c0;
-            --btn-highlight: #ffffff;
-            --btn-shadow: #808080;
-            --text: #000000;
-            --text-light: #ffffff;
-            --icon-bg: #ffcc44;
-        }
-
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
         }
-
-        body {
-            font-family: 'VT323', monospace;
-            margin: 0;
-            padding: 0;
-            background-color: var(--desktop);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow: hidden;
-            font-size: 16px;
-        }
-
-        .desktop {
-            display: flex;
-            flex-direction: column;
+        
+        /* This is critical to prevent horizontal overflow and scrolling */
+        html, body {
             width: 100%;
-            height: 100vh;
-            padding: 10px;
+            height: 100%;
+            overflow-x: hidden;
             position: relative;
-            overflow: hidden;
+            margin: 0;
+            padding: 0;
         }
-
-        .taskbar {
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0a18;
+            color: #ffffff;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+        
+        /* This is the main background that shows the gradient */
+        .space-background {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            height: 34px;
-            background-color: var(--btn-face);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-            border-top: 2px solid var(--btn-highlight);
-            z-index: 1000;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a18, #2d0047, #4a0072);
         }
-
-        .start-button {
-            background-color: var(--btn-face);
-            color: var(--text);
-            padding: 0 10px;
-            height: 28px;
-            border: 2px solid var(--btn-highlight);
-            border-right-color: var(--btn-shadow);
-            border-bottom-color: var(--btn-shadow);
-            display: flex;
-            align-items: center;
-            font-weight: bold;
+        
+        .cosmic-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
         }
-
-        .window {
+        
+        .stars {
             position: absolute;
-            top: 50px;
-            left: 50px;
-            width: 800px;
-            height: 600px;
-            background-color: var(--window-bg);
-            border: 2px solid var(--btn-highlight);
-            border-right-color: var(--btn-shadow);
-            border-bottom-color: var(--btn-shadow);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-
-        .window-header {
-            background-color: var(--window-header);
-            color: var(--text-light);
-            padding: 5px 10px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: move;
-        }
-
-        .window-title {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .window-controls {
-            display: flex;
-            gap: 4px;
-        }
-
-        .window-button {
-            width: 18px;
-            height: 18px;
-            background-color: var(--btn-face);
-            border: 2px solid var(--btn-highlight);
-            border-right-color: var(--btn-shadow);
-            border-bottom-color: var(--btn-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .window-content {
-            display: flex;
-            flex: 1;
-            padding: 10px;
-            overflow: hidden;
-        }
-
-        .main-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow: hidden;
-        }
-
-        .side-panel {
-            width: 200px;
-            padding-left: 10px;
-            border-left: 1px solid var(--btn-shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .canvas-container {
-            position: relative;
-            background-color: #000000;
-            border: 2px solid var(--btn-shadow);
-            border-right-color: var(--btn-highlight);
-            border-bottom-color: var(--btn-highlight);
-            overflow: hidden;
-            flex: 1;
-        }
-
-        #reactionCanvas {
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
         }
-
-        .control-panel {
-            background-color: var(--btn-face);
-            border: 2px solid var(--btn-highlight);
-            border-right-color: var(--btn-shadow);
-            border-bottom-color: var(--btn-shadow);
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .control-panel-header {
-            background-color: var(--window-header);
-            color: var(--text-light);
-            padding: 3px 6px;
-            margin: -10px -10px 10px -10px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .control-group {
-            margin-bottom: 10px;
-        }
-
-        .control-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        label {
-            flex: 1;
-            margin-right: 10px;
-            font-size: 0.9rem;
-        }
-
-        button {
-            background-color: var(--btn-face);
-            color: var(--text);
-            padding: 6px 12px;
-            border: 2px solid var(--btn-highlight);
-            border-right-color: var(--btn-shadow);
-            border-bottom-color: var(--btn-shadow);
-            font-family: 'VT323', monospace;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        button:active {
-            border: 2px solid var(--btn-shadow);
-            border-right-color: var(--btn-highlight);
-            border-bottom-color: var(--btn-highlight);
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        input[type="range"] {
-            width: 100%;
-        }
-
-        select {
-            width: 100%;
-            padding: 3px;
+        
+        .star {
+            position: absolute;
             background-color: #ffffff;
-            border: 2px solid var(--btn-shadow);
-            border-right-color: var(--btn-highlight);
-            border-bottom-color: var(--btn-highlight);
-            font-family: 'VT323', monospace;
-            font-size: 1rem;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
         }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-
-        .value-display {
-            background-color: #000000;
-            color: #00ff00;
-            font-family: 'VT323', monospace;
-            padding: 3px 6px;
-            width: 60px;
-            text-align: right;
-            border: 2px solid var(--btn-shadow);
-            border-right-color: var(--btn-highlight);
-            border-bottom-color: var(--btn-highlight);
-        }
-
-        .icon {
+        
+        .shooting-star {
             position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 80px;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+            border-radius: 50%;
+            animation: shoot 8s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            20% {
+                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
+                opacity: 0;
+            }
+        }
+        
+        /* Get Creative Button Styles */
+        .get-creative-button {
+            position: relative;
+            display: inline-block;
+            margin-top: 2rem;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background: linear-gradient(45deg, #ff6b6b, #9c27b0, #4ecdc4);
+            background-size: 200% 200%;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
-            padding: 5px;
+            animation: gradientButton 5s ease infinite;
+            box-shadow: 
+                0 5px 15px rgba(255, 107, 107, 0.4),
+                0 0 20px rgba(156, 39, 176, 0.3),
+                0 0 40px rgba(78, 205, 196, 0.2);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 10;
+            transform: perspective(1000px) rotateX(10deg);
         }
-
-        .icon-box {
-            width: 40px;
-            height: 40px;
-            background-color: var(--icon-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--btn-highlight);
-            border-right-color: var(--btn-shadow);
-            border-bottom-color: var(--btn-shadow);
+        
+        .get-creative-button:hover {
+            transform: perspective(1000px) rotateX(0deg) translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 8px 25px rgba(255, 107, 107, 0.6),
+                0 0 30px rgba(156, 39, 176, 0.5),
+                0 0 50px rgba(78, 205, 196, 0.4);
         }
-
-        .icon-label {
-            margin-top: 5px;
-            color: var(--text-light);
-            text-align: center;
-            font-size: 0.8rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        
+        .get-creative-button::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 55px;
+            background: linear-gradient(45deg, #ff6b6b, #9c27b0, #4ecdc4, #ff6b6b);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: animatedBorder 3s ease infinite;
+            filter: blur(10px);
+            opacity: 0.7;
         }
-
-        .status-info {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            color: var(--text);
-            font-family: 'VT323', monospace;
-            padding-left: 20px;
+        
+        @keyframes gradientButton {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-
-        .clock {
-            border-left: 1px solid var(--btn-shadow);
-            border-right: 1px solid var(--btn-highlight);
-            padding: 0 10px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-
-        @media (max-width: 768px) {
-            .window {
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
-
-            .window-content {
-                flex-direction: column;
-            }
-
-            .side-panel {
-                width: 100%;
-                border-left: none;
-                border-top: 1px solid var(--btn-shadow);
-                padding-left: 0;
-                padding-top: 10px;
-            }
+        
+        @keyframes animatedBorder {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
 <body>
-    <div class="desktop">
-        <!-- Desktop Icons -->
-        <div class="icon" style="top: 20px; left: 20px;">
-            <div class="icon-box">RD</div>
-            <div class="icon-label">Reaction-Diffusion</div>
-        </div>
-        
-        <!-- Main Window -->
-        <div class="window">
-            <div class="window-header">
-                <div class="window-title">Reaction-Diffusion System v1.0</div>
-                <div class="window-controls">
-                    <div class="window-button">_</div>
-                    <div class="window-button">[]</div>
-                    <div class="window-button">X</div>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="main-panel">
-                    <div class="canvas-container">
-                        <canvas id="reactionCanvas"></canvas>
-                    </div>
-                    
-                    <div class="control-panel">
-                        <div class="control-panel-header">Pattern Controls</div>
-                        <div class="control-row">
-                            <label for="patternType">Pattern Type:</label>
-                            <select id="patternType">
-                                <option value="spots">Spots</option>
-                                <option value="stripes">Stripes</option>
-                                <option value="maze">Maze</option>
-                                <option value="waves">Waves</option>
-                                <option value="fingerprints">Fingerprints</option>
-                            </select>
-                        </div>
-                        
-                        <div class="control-row">
-                            <label for="visualizationMode">Visualization:</label>
-                            <select id="visualizationMode">
-                                <option value="chemical-b">Chemical B</option>
-                                <option value="gradient">Gradient</option>
-                                <option value="heatmap">Heatmap</option>
-                                <option value="contour">Contour</option>
-                            </select>
-                        </div>
-                        
-                        <div class="control-row">
-                            <label for="colorPalette">Color Palette:</label>
-                            <select id="colorPalette">
-                                <option value="ocean">Ocean</option>
-                                <option value="sunset">Sunset</option>
-                                <option value="forest">Forest</option>
-                                <option value="desert">Desert</option>
-                                <option value="arctic">Arctic</option>
-                                <option value="neon">Neon</option>
-                                <option value="grayscale">Grayscale</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="side-panel">
-                    <div class="control-panel">
-                        <div class="control-panel-header">Parameters</div>
-                        <div class="control-group">
-                            <div class="control-row">
-                                <label for="complexity">Complexity:</label>
-                                <div class="value-display" id="complexityValue">5</div>
-                            </div>
-                            <input type="range" id="complexity" min="1" max="10" value="5">
-                        </div>
-                        
-                        <div class="control-group">
-                            <div class="control-row">
-                                <label for="feedRate">Feed Rate:</label>
-                                <div class="value-display" id="feedRateValue">0.0367</div>
-                            </div>
-                            <input type="range" id="feedRate" min="0.01" max="0.1" step="0.001" value="0.0367">
-                        </div>
-                        
-                        <div class="control-group">
-                            <div class="control-row">
-                                <label for="killRate">Kill Rate:</label>
-                                <div class="value-display" id="killRateValue">0.0649</div>
-                            </div>
-                            <input type="range" id="killRate" min="0.01" max="0.1" step="0.001" value="0.0649">
-                        </div>
-                        
-                        <div class="control-group">
-                            <div class="control-row">
-                                <label for="timeStep">Time Step:</label>
-                                <div class="value-display" id="timeStepValue">1.0</div>
-                            </div>
-                            <input type="range" id="timeStep" min="0.1" max="2" step="0.1" value="1">
-                        </div>
-                    </div>
-                    
-                    <div class="control-panel">
-                        <div class="control-panel-header">Symmetry</div>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="horizontalSymmetry" checked>
-                                Horizontal
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="verticalSymmetry" checked>
-                                Vertical
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="radialSymmetry">
-                                Radial
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="control-panel">
-                        <div class="control-panel-header">Actions</div>
-                        <div class="action-buttons">
-                            <button id="resetButton">Reset</button>
-                            <button id="randomizeButton">Randomize</button>
-                            <button id="downloadButton">Save</button>
-                            <button id="audioButton">Audio</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Taskbar -->
-        <div class="taskbar">
-            <div class="start-button">START</div>
-            <div class="status-info">Click and drag on the canvas to interact with the pattern</div>
-            <div class="clock" id="clock">12:00 PM</div>
+    <div class="space-background">
+        <div class="cosmic-elements">
+            <div class="stars" id="stars"></div>
+            <div class="cosmic-clouds"></div>
+            <div class="planet planet-1"></div>
+            <div class="planet planet-2"></div>
+            <div class="hero-artwork"></div>
         </div>
     </div>
+    
+    <div class="container">
+        <!-- Updated Logo structure with stacked text -->
+        <div class="logo">
+            <div class="logo-inner" id="logoInner">
+                <div class="logo-word logo-word-1">
+                    <span class="logo-text">LUNAR</span>
+                </div>
+                <div class="logo-word logo-word-2">
+                    <span class="logo-text">LABYRINTH</span>
+                </div>
+                <div class="logo-3d-effect">
+                    <div class="logo-3d-face"></div>
+                    <div class="logo-depth"></div>
+                </div>
+                <div class="logo-reflection"></div>
+                <div class="logo-shine"></div>
+            </div>
+        </div>
+        
+        <div class="coming-soon">Coming Soon</div>
+        
+        <p class="tagline">Discover the mysteries of the Lunar Labyrinth</p>
+        
+        <div class="countdown">
+            <div class="countdown-item">
+                <span class="countdown-number" id="days">00</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="hours">00</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="minutes">00</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="seconds">00</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+        
+        <p class="description"> 
+            Art Becomes Mystery and Collection Transforms into Quest.
 
-    <script type="module" src="/src/main.js"></script>
+Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experience that transcends conventional digital art collection, transforming it into an intricate cosmic treasure hunt. This revolutionary project doesn't merely present art—it challenges you to unravel its secrets, seamlessly blending visual mastery with intellectual enigmas that reward both the aesthetic and investigative mind.
+            Join us on a journey through the Lunar Labyrinth.
+        </p>
+        
+        <!-- Get Creative Button -->
+        <a href="art-apps/index.html" class="get-creative-button">
+            Get Creative
+        </a>
+        
+        <div class="social-links">
+            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">
+                𝕏
+            </a>
+        </div>
+        
+        <footer>
+            © 2025 Lunar Labyrinth. All rights reserved.
+        </footer>
+    </div>
+    
+    <div class="control-section">
+        <h3>Colors</h3>
+        <div class="control-grid">
+            <div class="control-item">
+                <label for="backgroundColor">Background</label>
+                <input type="color" id="backgroundColor" value="#000000">
+            </div>
+            <div class="control-item">
+                <label for="primaryColor">Primary</label>
+                <input type="color" id="primaryColor" value="#6b46c1">
+            </div>
+            <div class="control-item">
+                <label for="secondaryColor">Secondary</label>
+                <input type="color" id="secondaryColor" value="#f472b6">
+            </div>
+            <div class="control-item full-width">
+                <label for="colorScheme">Color Scheme</label>
+                <select id="colorScheme">
+                    <option value="random">Random</option>
+                    <option value="monochrome">Monochrome</option>
+                    <option value="complementary">Complementary</option>
+                    <option value="analogous">Analogous</option>
+                    <option value="triadic">Triadic</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="neon">Neon</option>
+                    <option value="retro" selected>Retro</option>
+                    <option value="contrast">High Contrast</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // Simple clock functionality
-        function updateClock() {
+        // Get DOM elements
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const generateBtn = document.getElementById('generateBtn');
+        const randomizeBtn = document.getElementById('randomizeBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const backgroundColor = document.getElementById('backgroundColor');
+        const scale = document.getElementById('scale');
+        const intensity = document.getElementById('intensity');
+        const density = document.getElementById('density');
+        const rotation = document.getElementById('rotation');
+        const mirrorX = document.getElementById('mirrorX');
+        const mirrorY = document.getElementById('mirrorY');
+        const primaryColor = document.getElementById('primaryColor');
+        const secondaryColor = document.getElementById('secondaryColor');
+        const colorScheme = document.getElementById('colorScheme');
+        const colorPalette = document.getElementById('colorPalette');
+        const blur = document.getElementById('blur');
+        const pixelate = document.getElementById('pixelate');
+        const contrast = document.getElementById('contrast');
+        const brightness = document.getElementById('brightness');
+
+        // Clear the canvas
+        function clearCanvas() {
+            const bgColor = hexToRgb(backgroundColor.value);
+            pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
+            for (let i = 0; i < pixels.length; i += 4) {
+                pixels[i] = bgColor.r;
+                pixels[i + 1] = bgColor.g;
+                pixels[i + 2] = bgColor.b;
+                pixels[i + 3] = 255;
+            }
+            updateCanvas();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            generateBtn.addEventListener('click', generateArt);
+            randomizeBtn.addEventListener('click', randomizeAll);
+            saveBtn.addEventListener('click', saveImage);
+            [scale, intensity, density, rotation, mirrorX, mirrorY, backgroundColor].forEach(control => {
+                control.addEventListener('input', generateArt);
+            });
+            [colorScheme, primaryColor, secondaryColor].forEach(control => {
+                control.addEventListener('change', () => {
+                    generatePalette();
+                    generateArt();
+                });
+            });
+            [blur, pixelate, contrast, brightness].forEach(control => {
+                control.addEventListener('input', applyPostProcessing);
+            });
+        }
+
+        // Generate high contrast colors
+        function generateContrastingColor(baseColor) {
+            const hsl = rgbToHsl(baseColor.r, baseColor.g, baseColor.b);
+            return hslToRgb((hsl.h + 0.5) % 1, Math.min(1, hsl.s + 0.2), 1 - hsl.l);
+        }
+
+        // Enhanced color palette generation
+        function generatePalette() {
+            const scheme = colorScheme.value;
+            const primary = hexToRgb(primaryColor.value);
+            const secondary = hexToRgb(secondaryColor.value);
+            palette = [];
+
+            switch (scheme) {
+                case 'contrast':
+                    for (let i = 0; i < 8; i++) {
+                        if (i % 2 === 0) {
+                            palette.push(primary);
+                        } else {
+                            palette.push(generateContrastingColor(primary));
+                        }
+                    }
+                    break;
+                case 'random':
+                    for (let i = 0; i < 8; i++) {
+                        const hue = Math.random();
+                        const sat = 0.7 + Math.random() * 0.3; // High saturation
+                        const light = 0.4 + Math.random() * 0.2; // Medium lightness
+                        palette.push(hslToRgb(hue, sat, light));
+                    }
+                    break;
+                // ... rest of the existing color schemes ...
+            }
+            updatePaletteDisplay();
+        }
+
+        // Enhanced post-processing
+        function applyPostProcessing() {
+            const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            const data = imageData.data;
+            const b = parseFloat(blur.value);
+            const p = parseInt(pixelate.value);
+            const c = parseFloat(contrast.value);
+            const br = parseFloat(brightness.value);
+
+            // Apply contrast and brightness
+            for (let i = 0; i < data.length; i += 4) {
+                for (let j = 0; j < 3; j++) {
+                    let value = data[i + j];
+                    // Apply contrast
+                    value = ((value / 255 - 0.5) * c + 0.5) * 255;
+                    // Apply brightness
+                    value = value * br;
+                    // Clamp values
+                    data[i + j] = Math.max(0, Math.min(255, value));
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+
+            // Apply pixelation
+            if (p > 1) {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = CANVAS_SIZE;
+                tempCanvas.height = CANVAS_SIZE;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(canvas, 0, 0);
+                
+                ctx.imageSmoothingEnabled = false;
+                ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                ctx.drawImage(canvas, 0, 0, CANVAS_SIZE/p, CANVAS_SIZE/p);
+                ctx.drawImage(canvas, 0, 0, CANVAS_SIZE/p, CANVAS_SIZE/p, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            }
+
+            // Apply blur
+            if (b > 0) {
+                ctx.filter = `blur(${b}px)`;
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = CANVAS_SIZE;
+                tempCanvas.height = CANVAS_SIZE;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(canvas, 0, 0);
+                ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                ctx.drawImage(tempCanvas, 0, 0);
+                ctx.filter = 'none';
+            }
+        }
+
+        // Enhanced randomization
+        function randomizeAll() {
+            scale.value = (Math.random() * 9.9 + 0.1).toFixed(1);
+            intensity.value = (Math.random() * 0.6 + 0.4).toFixed(1); // More intense colors
+            density.value = Math.floor(Math.random() * 32) + 1;
+            rotation.value = Math.floor(Math.random() * 361);
+            
+            // Generate contrasting colors
+            const hue = Math.random();
+            const primaryHsl = { h: hue, s: 0.7 + Math.random() * 0.3, l: 0.4 + Math.random() * 0.2 };
+            const secondaryHsl = { h: (hue + 0.5) % 1, s: 0.7 + Math.random() * 0.3, l: 0.4 + Math.random() * 0.2 };
+            
+            const primaryRgb = hslToRgb(primaryHsl.h, primaryHsl.s, primaryHsl.l);
+            const secondaryRgb = hslToRgb(secondaryHsl.h, secondaryHsl.s, secondaryHsl.l);
+            
+            primaryColor.value = `#${((1 << 24) + (primaryRgb.r << 16) + (primaryRgb.g << 8) + primaryRgb.b).toString(16).slice(1)}`;
+            secondaryColor.value = `#${((1 << 24) + (secondaryRgb.r << 16) + (secondaryRgb.g << 8) + secondaryRgb.b).toString(16).slice(1)}`;
+            
+            // Randomly select a color scheme
+            const schemes = colorScheme.options;
+            colorScheme.value = schemes[Math.floor(Math.random() * schemes.length)].value;
+            
+            generatePalette();
+            generateArt();
+        }
+
+        // Create stars based on screen size
+        function createStars() {
+            const stars = document.getElementById('stars');
+            stars.innerHTML = ''; // Clear any existing stars
+            
+            // Adjust star count based on screen size
+            const count = window.innerWidth < 768 ? 300 : 500;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                
+                // Random size and color - adjust for smaller screens
+                const maxSize = window.innerWidth < 768 ? 2 : 3;
+                const size = Math.random() * maxSize;
+                const colors = ['#ffffff', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random opacity and animation delay
+                const opacity = Math.random() * 0.8 + 0.2;
+                const delay = Math.random() * 5;
+                
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.backgroundColor = color;
+                star.style.opacity = opacity;
+                star.style.animationDelay = `${delay}s`;
+                
+                stars.appendChild(star);
+            }
+            
+            // Add shooting stars, fewer on mobile
+            const shootingStarCount = window.innerWidth < 768 ? 3 : 5;
+            for (let i = 0; i < shootingStarCount; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                
+                // Random position
+                const x = Math.random() * window.innerWidth * 0.8;
+                const y = Math.random() * window.innerHeight * 0.8;
+                
+                // Random trail color
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random animation delay
+                const delay = Math.random() * 15;
+                
+                shootingStar.style.left = `${x}px`;
+                shootingStar.style.top = `${y}px`;
+                shootingStar.style.background = `linear-gradient(to right, rgba(0,0,0,0), ${color})`;
+                shootingStar.style.animationDelay = `${delay}s`;
+                
+                stars.appendChild(shootingStar);
+            }
+        }
+
+        // Call createStars when the page loads
+        window.addEventListener('load', createStars);
+        
+        // Recalculate stars when window is resized
+        window.addEventListener('resize', createStars);
+        
+        // 3D tilt effect for logo
+        document.addEventListener('mousemove', function(e) {
+            const logo = document.getElementById('logoInner');
+            if (!logo) return;
+            
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            
+            // Calculate rotation based on mouse position
+            const rotateY = (e.clientX - winWidth / 2) * 0.01;
+            const rotateX = (e.clientY - winHeight / 2) * -0.01;
+            
+            // Apply rotation with limits
+            logo.style.transform = `perspective(1000px) rotateY(${Math.min(Math.max(rotateY, -10), 10)}deg) rotateX(${Math.min(Math.max(rotateX, -10), 10)}deg)`;
+        });
+        
+        // Set launch date (adjust as needed)
+        const launchDate = new Date('2025-09-30T00:00:00');
+        
+        // Update countdown
+        function updateCountdown() {
             const now = new Date();
-            let hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // Convert 0 to 12
-            document.getElementById('clock').textContent = `${hours}:${minutes} ${ampm}`;
+            const diff = launchDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
         
-        // Update clock every minute
-        setInterval(updateClock, 60000);
-        updateClock(); // Initial update
+        // Update countdown immediately
+        updateCountdown();
         
-        // Simple window dragging
-        const windowHeader = document.querySelector('.window-header');
-        const window = document.querySelector('.window');
-        let isDragging = false;
-        let offsetX, offsetY;
-        
-        windowHeader.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            offsetX = e.clientX - window.offsetLeft;
-            offsetY = e.clientY - window.offsetTop;
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                window.style.left = (e.clientX - offsetX) + 'px';
-                window.style.top = (e.clientY - offsetY) + 'px';
-            }
-        });
-        
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-        
-        // Desktop icon launches the window
-        const desktopIcon = document.querySelector('.icon');
-        desktopIcon.addEventListener('click', () => {
-            window.style.display = 'flex';
-        });
-        
-        // Window controls
-        const closeButton = document.querySelector('.window-controls').children[2];
-        closeButton.addEventListener('click', () => {
-            window.style.display = 'none';
-        });
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html> 
