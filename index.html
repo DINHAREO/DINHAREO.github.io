@@ -3,176 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lunar Labyrinth - Coming Soon</title>
+    <title>Lunar Labyrinth - Get Creative</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        /* This is critical to prevent horizontal overflow and scrolling */
-        html, body {
+        /* Add new styles for the art apps grid */
+        .art-apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            position: relative;
-            margin: 0;
-            padding: 0;
+            max-width: 1200px;
+            padding: 2rem;
+            margin: 2rem 0;
         }
-        
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #0a0a18;
-            color: #ffffff;
-            line-height: 1.6;
+
+        .art-app-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-y: auto;
-        }
-        
-        /* This is the main background that shows the gradient */
-        .space-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: linear-gradient(135deg, #0a0a18, #2d0047, #4a0072);
-        }
-        
-        .cosmic-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            text-decoration: none;
+            color: white;
             height: 100%;
         }
-        
-        .star {
-            position: absolute;
-            background-color: #ffffff;
-            border-radius: 50%;
-            animation: twinkle 5s infinite;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-        }
-        
-        @keyframes twinkle {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-        
-        .shooting-star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
-            border-radius: 50%;
-            animation: shoot 8s linear infinite;
-            opacity: 0;
-        }
-        
-        @keyframes shoot {
-            0% {
-                transform: translateX(0) translateY(0);
-                opacity: 0;
-            }
-            5% {
-                opacity: 1;
-            }
-            20% {
-                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
-                opacity: 0;
-            }
-            100% {
-                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
-                opacity: 0;
-            }
-        }
-        
-        /* Get Creative Button Styles */
-        .get-creative-button {
-            position: relative;
-            display: inline-block;
-            margin-top: 2rem;
-            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ffffff;
-            background: linear-gradient(45deg, #ff6b6b, #9c27b0, #4ecdc4);
-            background-size: 200% 200%;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            animation: gradientButton 5s ease infinite;
+
+        .art-app-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
             box-shadow: 
-                0 5px 15px rgba(255, 107, 107, 0.4),
-                0 0 20px rgba(156, 39, 176, 0.3),
-                0 0 40px rgba(78, 205, 196, 0.2);
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            z-index: 10;
-            transform: perspective(1000px) rotateX(10deg);
+                0 10px 20px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(78, 205, 196, 0.3),
+                0 0 40px rgba(156, 39, 176, 0.2);
         }
-        
-        .get-creative-button:hover {
-            transform: perspective(1000px) rotateX(0deg) translateY(-5px) scale(1.05);
-            box-shadow: 
-                0 8px 25px rgba(255, 107, 107, 0.6),
-                0 0 30px rgba(156, 39, 176, 0.5),
-                0 0 50px rgba(78, 205, 196, 0.4);
-        }
-        
-        .get-creative-button::before {
+
+        .art-app-card::before {
             content: '';
             position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border-radius: 55px;
-            background: linear-gradient(45deg, #ff6b6b, #9c27b0, #4ecdc4, #ff6b6b);
-            background-size: 400% 400%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255, 107, 107, 0.1), 
+                rgba(156, 39, 176, 0.1), 
+                rgba(78, 205, 196, 0.1)
+            );
+            border-radius: 20px;
             z-index: -1;
-            animation: animatedBorder 3s ease infinite;
-            filter: blur(10px);
-            opacity: 0.7;
+            transition: all 0.3s ease;
         }
-        
-        @keyframes gradientButton {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+
+        .art-app-card:hover::before {
+            opacity: 0.8;
         }
-        
-        @keyframes animatedBorder {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+
+        .art-app-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .art-app-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .art-app-description {
+            font-size: 0.9rem;
+            color: #d1d1e0;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .art-app-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #4ecdc4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            overflow-x: hidden;
         }
     </style>
 </head>
@@ -188,387 +129,44 @@
     </div>
     
     <div class="container">
-        <!-- Updated Logo structure with stacked text -->
-        <div class="logo">
-            <div class="logo-inner" id="logoInner">
-                <div class="logo-word logo-word-1">
-                    <span class="logo-text">LUNAR</span>
-                </div>
-                <div class="logo-word logo-word-2">
-                    <span class="logo-text">LABYRINTH</span>
-                </div>
-                <div class="logo-3d-effect">
-                    <div class="logo-3d-face"></div>
-                    <div class="logo-depth"></div>
-                </div>
-                <div class="logo-reflection"></div>
-                <div class="logo-shine"></div>
-            </div>
-        </div>
-        
-        <div class="coming-soon">Coming Soon</div>
-        
-        <p class="tagline">Discover the mysteries of the Lunar Labyrinth</p>
-        
-        <div class="countdown">
-            <div class="countdown-item">
-                <span class="countdown-number" id="days">00</span>
-                <span class="countdown-label">Days</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="hours">00</span>
-                <span class="countdown-label">Hours</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="minutes">00</span>
-                <span class="countdown-label">Minutes</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="seconds">00</span>
-                <span class="countdown-label">Seconds</span>
-            </div>
-        </div>
-        
-        <p class="description"> 
-            Art Becomes Mystery and Collection Transforms into Quest.
-
-Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experience that transcends conventional digital art collection, transforming it into an intricate cosmic treasure hunt. This revolutionary project doesn't merely present art—it challenges you to unravel its secrets, seamlessly blending visual mastery with intellectual enigmas that reward both the aesthetic and investigative mind.
-            Join us on a journey through the Lunar Labyrinth.
+        <h1>Get Creative</h1>
+        <p>
+            Unleash your imagination in the Lunar Labyrinth. This space is yours to explore, create, and share your own cosmic mysteries.
         </p>
         
-        <!-- Get Creative Button -->
-        <a href="art-apps/index.html" class="get-creative-button">
-            Get Creative
-        </a>
-        
-        <div class="social-links">
-            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">
-                𝕏
+        <div class="art-apps-grid">
+            <!-- Pixel Art Generator Card -->
+            <a href="pixel-art-generator/index.html" class="art-app-card">
+                <img src="images/pixel-art-preview.jpg" alt="Pixel Art Generator" class="art-app-image">
+                <h3 class="art-app-title">Pixel Art Generator</h3>
+                <p class="art-app-description">
+                    Create stunning pixel art with various algorithms, patterns, and color schemes. Features cellular automata, Perlin noise, mandalas, and more.
+                </p>
+                <span class="art-app-tag">Interactive Art</span>
             </a>
+            
+            <!-- Placeholder for future apps -->
+            <div class="art-app-card" style="opacity: 0.5; cursor: not-allowed;">
+                <div class="art-app-image"></div>
+                <h3 class="art-app-title">Coming Soon</h3>
+                <p class="art-app-description">
+                    More creative tools are on their way. Stay tuned for updates!
+                </p>
+                <span class="art-app-tag">Future Release</span>
+            </div>
         </div>
-        
+
+        <div class="social-links">
+            <a href="index.html" class="creative-button">Back to Home</a>
+            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">𝕏</a>
+        </div>
         <footer>
             © 2025 Lunar Labyrinth. All rights reserved.
         </footer>
     </div>
     
-    <div class="control-section">
-        <h3>Colors</h3>
-        <div class="control-grid">
-            <div class="control-item">
-                <label for="backgroundColor">Background</label>
-                <input type="color" id="backgroundColor" value="#000000">
-            </div>
-            <div class="control-item">
-                <label for="primaryColor">Primary</label>
-                <input type="color" id="primaryColor" value="#6b46c1">
-            </div>
-            <div class="control-item">
-                <label for="secondaryColor">Secondary</label>
-                <input type="color" id="secondaryColor" value="#f472b6">
-            </div>
-            <div class="control-item full-width">
-                <label for="colorScheme">Color Scheme</label>
-                <select id="colorScheme">
-                    <option value="random">Random</option>
-                    <option value="monochrome">Monochrome</option>
-                    <option value="complementary">Complementary</option>
-                    <option value="analogous">Analogous</option>
-                    <option value="triadic">Triadic</option>
-                    <option value="pastel">Pastel</option>
-                    <option value="neon">Neon</option>
-                    <option value="retro" selected>Retro</option>
-                    <option value="contrast">High Contrast</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    
     <script>
-        // Get DOM elements
-        const canvas = document.getElementById('pixelCanvas');
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        const generateBtn = document.getElementById('generateBtn');
-        const randomizeBtn = document.getElementById('randomizeBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const backgroundColor = document.getElementById('backgroundColor');
-        const scale = document.getElementById('scale');
-        const intensity = document.getElementById('intensity');
-        const density = document.getElementById('density');
-        const rotation = document.getElementById('rotation');
-        const mirrorX = document.getElementById('mirrorX');
-        const mirrorY = document.getElementById('mirrorY');
-        const primaryColor = document.getElementById('primaryColor');
-        const secondaryColor = document.getElementById('secondaryColor');
-        const colorScheme = document.getElementById('colorScheme');
-        const colorPalette = document.getElementById('colorPalette');
-        const blur = document.getElementById('blur');
-        const pixelate = document.getElementById('pixelate');
-        const contrast = document.getElementById('contrast');
-        const brightness = document.getElementById('brightness');
-
-        // Clear the canvas
-        function clearCanvas() {
-            const bgColor = hexToRgb(backgroundColor.value);
-            pixels = new Uint8ClampedArray(CANVAS_SIZE * CANVAS_SIZE * 4);
-            for (let i = 0; i < pixels.length; i += 4) {
-                pixels[i] = bgColor.r;
-                pixels[i + 1] = bgColor.g;
-                pixels[i + 2] = bgColor.b;
-                pixels[i + 3] = 255;
-            }
-            updateCanvas();
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            generateBtn.addEventListener('click', generateArt);
-            randomizeBtn.addEventListener('click', randomizeAll);
-            saveBtn.addEventListener('click', saveImage);
-            [scale, intensity, density, rotation, mirrorX, mirrorY, backgroundColor].forEach(control => {
-                control.addEventListener('input', generateArt);
-            });
-            [colorScheme, primaryColor, secondaryColor].forEach(control => {
-                control.addEventListener('change', () => {
-                    generatePalette();
-                    generateArt();
-                });
-            });
-            [blur, pixelate, contrast, brightness].forEach(control => {
-                control.addEventListener('input', applyPostProcessing);
-            });
-        }
-
-        // Generate high contrast colors
-        function generateContrastingColor(baseColor) {
-            const hsl = rgbToHsl(baseColor.r, baseColor.g, baseColor.b);
-            return hslToRgb((hsl.h + 0.5) % 1, Math.min(1, hsl.s + 0.2), 1 - hsl.l);
-        }
-
-        // Enhanced color palette generation
-        function generatePalette() {
-            const scheme = colorScheme.value;
-            const primary = hexToRgb(primaryColor.value);
-            const secondary = hexToRgb(secondaryColor.value);
-            palette = [];
-
-            switch (scheme) {
-                case 'contrast':
-                    for (let i = 0; i < 8; i++) {
-                        if (i % 2 === 0) {
-                            palette.push(primary);
-                        } else {
-                            palette.push(generateContrastingColor(primary));
-                        }
-                    }
-                    break;
-                case 'random':
-                    for (let i = 0; i < 8; i++) {
-                        const hue = Math.random();
-                        const sat = 0.7 + Math.random() * 0.3; // High saturation
-                        const light = 0.4 + Math.random() * 0.2; // Medium lightness
-                        palette.push(hslToRgb(hue, sat, light));
-                    }
-                    break;
-                // ... rest of the existing color schemes ...
-            }
-            updatePaletteDisplay();
-        }
-
-        // Enhanced post-processing
-        function applyPostProcessing() {
-            const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            const data = imageData.data;
-            const b = parseFloat(blur.value);
-            const p = parseInt(pixelate.value);
-            const c = parseFloat(contrast.value);
-            const br = parseFloat(brightness.value);
-
-            // Apply contrast and brightness
-            for (let i = 0; i < data.length; i += 4) {
-                for (let j = 0; j < 3; j++) {
-                    let value = data[i + j];
-                    // Apply contrast
-                    value = ((value / 255 - 0.5) * c + 0.5) * 255;
-                    // Apply brightness
-                    value = value * br;
-                    // Clamp values
-                    data[i + j] = Math.max(0, Math.min(255, value));
-                }
-            }
-            ctx.putImageData(imageData, 0, 0);
-
-            // Apply pixelation
-            if (p > 1) {
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = CANVAS_SIZE;
-                tempCanvas.height = CANVAS_SIZE;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(canvas, 0, 0);
-                
-                ctx.imageSmoothingEnabled = false;
-                ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-                ctx.drawImage(canvas, 0, 0, CANVAS_SIZE/p, CANVAS_SIZE/p);
-                ctx.drawImage(canvas, 0, 0, CANVAS_SIZE/p, CANVAS_SIZE/p, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            }
-
-            // Apply blur
-            if (b > 0) {
-                ctx.filter = `blur(${b}px)`;
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = CANVAS_SIZE;
-                tempCanvas.height = CANVAS_SIZE;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.drawImage(canvas, 0, 0);
-                ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-                ctx.drawImage(tempCanvas, 0, 0);
-                ctx.filter = 'none';
-            }
-        }
-
-        // Enhanced randomization
-        function randomizeAll() {
-            scale.value = (Math.random() * 9.9 + 0.1).toFixed(1);
-            intensity.value = (Math.random() * 0.6 + 0.4).toFixed(1); // More intense colors
-            density.value = Math.floor(Math.random() * 32) + 1;
-            rotation.value = Math.floor(Math.random() * 361);
-            
-            // Generate contrasting colors
-            const hue = Math.random();
-            const primaryHsl = { h: hue, s: 0.7 + Math.random() * 0.3, l: 0.4 + Math.random() * 0.2 };
-            const secondaryHsl = { h: (hue + 0.5) % 1, s: 0.7 + Math.random() * 0.3, l: 0.4 + Math.random() * 0.2 };
-            
-            const primaryRgb = hslToRgb(primaryHsl.h, primaryHsl.s, primaryHsl.l);
-            const secondaryRgb = hslToRgb(secondaryHsl.h, secondaryHsl.s, secondaryHsl.l);
-            
-            primaryColor.value = `#${((1 << 24) + (primaryRgb.r << 16) + (primaryRgb.g << 8) + primaryRgb.b).toString(16).slice(1)}`;
-            secondaryColor.value = `#${((1 << 24) + (secondaryRgb.r << 16) + (secondaryRgb.g << 8) + secondaryRgb.b).toString(16).slice(1)}`;
-            
-            // Randomly select a color scheme
-            const schemes = colorScheme.options;
-            colorScheme.value = schemes[Math.floor(Math.random() * schemes.length)].value;
-            
-            generatePalette();
-            generateArt();
-        }
-
-        // Create stars based on screen size
-        function createStars() {
-            const stars = document.getElementById('stars');
-            stars.innerHTML = ''; // Clear any existing stars
-            
-            // Adjust star count based on screen size
-            const count = window.innerWidth < 768 ? 300 : 500;
-            
-            for (let i = 0; i < count; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                
-                // Random position
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                
-                // Random size and color - adjust for smaller screens
-                const maxSize = window.innerWidth < 768 ? 2 : 3;
-                const size = Math.random() * maxSize;
-                const colors = ['#ffffff', '#ff6b6b', '#4ecdc4', '#45b7d1'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Random opacity and animation delay
-                const opacity = Math.random() * 0.8 + 0.2;
-                const delay = Math.random() * 5;
-                
-                star.style.left = `${x}px`;
-                star.style.top = `${y}px`;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.backgroundColor = color;
-                star.style.opacity = opacity;
-                star.style.animationDelay = `${delay}s`;
-                
-                stars.appendChild(star);
-            }
-            
-            // Add shooting stars, fewer on mobile
-            const shootingStarCount = window.innerWidth < 768 ? 3 : 5;
-            for (let i = 0; i < shootingStarCount; i++) {
-                const shootingStar = document.createElement('div');
-                shootingStar.className = 'shooting-star';
-                
-                // Random position
-                const x = Math.random() * window.innerWidth * 0.8;
-                const y = Math.random() * window.innerHeight * 0.8;
-                
-                // Random trail color
-                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Random animation delay
-                const delay = Math.random() * 15;
-                
-                shootingStar.style.left = `${x}px`;
-                shootingStar.style.top = `${y}px`;
-                shootingStar.style.background = `linear-gradient(to right, rgba(0,0,0,0), ${color})`;
-                shootingStar.style.animationDelay = `${delay}s`;
-                
-                stars.appendChild(shootingStar);
-            }
-        }
-
-        // Call createStars when the page loads
-        window.addEventListener('load', createStars);
-        
-        // Recalculate stars when window is resized
-        window.addEventListener('resize', createStars);
-        
-        // 3D tilt effect for logo
-        document.addEventListener('mousemove', function(e) {
-            const logo = document.getElementById('logoInner');
-            if (!logo) return;
-            
-            const winWidth = window.innerWidth;
-            const winHeight = window.innerHeight;
-            
-            // Calculate rotation based on mouse position
-            const rotateY = (e.clientX - winWidth / 2) * 0.01;
-            const rotateX = (e.clientY - winHeight / 2) * -0.01;
-            
-            // Apply rotation with limits
-            logo.style.transform = `perspective(1000px) rotateY(${Math.min(Math.max(rotateY, -10), 10)}deg) rotateX(${Math.min(Math.max(rotateX, -10), 10)}deg)`;
-        });
-        
-        // Set launch date (adjust as needed)
-        const launchDate = new Date('2025-09-30T00:00:00');
-        
-        // Update countdown
-        function updateCountdown() {
-            const now = new Date();
-            const diff = launchDate - now;
-            
-            if (diff <= 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                return;
-            }
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
-        
-        // Update countdown immediately
-        updateCountdown();
-        
-        // Update countdown every second
-        setInterval(updateCountdown, 1000);
+        // ... existing script ...
     </script>
 </body>
 </html> 
