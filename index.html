@@ -3,104 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lunar Labyrinth - Get Creative</title>
+    <title>Lunar Labyrinth - Coming Soon</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Add new styles for the art apps grid */
-        .art-apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-width: 1200px;
-            padding: 2rem;
-            margin: 2rem 0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        .art-app-card {
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
             position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0a18;
+            color: #ffffff;
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none;
-            color: white;
+            overflow-y: auto;
+        }
+        
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a18, #2d0047, #4a0072);
+        }
+        
+        .cosmic-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
         }
-
-        .art-app-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 10px 20px rgba(0, 0, 0, 0.2),
-                0 0 20px rgba(78, 205, 196, 0.3),
-                0 0 40px rgba(156, 39, 176, 0.2);
+        
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
         }
-
-        .art-app-card::before {
-            content: '';
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+            border-radius: 50%;
+            animation: shoot 8s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            20% {
+                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(calc(100vw * 0.2)) translateY(calc(100vh * 0.2));
+                opacity: 0;
+            }
+        }
+        
+        .cosmic-clouds {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
+            animation: floatClouds 30s ease-in-out infinite;
+            opacity: 0.5;
+        }
+        
+        @keyframes floatClouds {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: orbit 20s linear infinite;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        .planet-1 {
+            width: min(80px, 15vw);
+            height: min(80px, 15vw);
+            background: radial-gradient(circle at 30% 30%, #9c27b0, #6a0080);
+            bottom: 15%;
+            left: 10%;
+            animation-delay: -5s;
+        }
+        
+        .planet-2 {
+            width: min(60px, 12vw);
+            height: min(60px, 12vw);
+            background: radial-gradient(circle at 30% 30%, #3f51b5, #303f9f);
+            top: 30%;
+            left: 5%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes orbit {
+            0% { transform: translateX(0) rotate(0deg); }
+            50% { transform: translateX(min(50px, 5vw)) rotate(180deg); }
+            100% { transform: translateX(0) rotate(360deg); }
+        }
+        
+        .hero-artwork {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, 
-                rgba(255, 107, 107, 0.1), 
-                rgba(156, 39, 176, 0.1), 
-                rgba(78, 205, 196, 0.1)
-            );
-            border-radius: 20px;
-            z-index: -1;
-            transition: all 0.3s ease;
-        }
-
-        .art-app-card:hover::before {
-            opacity: 0.8;
-        }
-
-        .art-app-image {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            background: rgba(255,255,255,0.1);
+            height: 100%;
+            background: url('Untitled513_20250304094118.jpeg') no-repeat center center;
+            background-size: cover;
+            opacity: 0.35;
+            z-index: -2;
+            filter: blur(3px);
+            animation: fadeIn 10s infinite;
         }
-
-        .art-app-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        
+        @keyframes fadeIn {
+            0% { opacity: 0.25; }
+            50% { opacity: 0.35; }
+            100% { opacity: 0.25; }
         }
-
-        .art-app-description {
-            font-size: 0.9rem;
-            color: #d1d1e0;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .art-app-tag {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            color: #4ecdc4;
-        }
-
+        
         .container {
             width: 100%;
             max-width: 1200px;
@@ -114,6 +191,423 @@
             position: relative;
             z-index: 1;
             overflow-x: hidden;
+        }
+        
+        .logo {
+            margin-bottom: clamp(1.5rem, 5vh, 3rem);
+            position: relative;
+            width: 100%;
+            max-width: min(800px, 95vw);
+            text-align: center;
+            perspective: 1000px;
+        }
+        
+        .logo-inner {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .logo-word {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: clamp(2px, 1vw, 6px);
+            position: relative;
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .logo-word-1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            margin-bottom: 0.2em;
+        }
+        
+        .logo-word-2 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+        }
+        
+        .logo-text {
+            background-image: linear-gradient(
+                90deg, 
+                #ff6b6b, 
+                #4ecdc4, 
+                #45b7d1, 
+                #ff6b6b
+            );
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientFlow 8s ease infinite;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            text-shadow: 
+                0 0 15px rgba(255, 107, 107, 0.5),
+                0 0 20px rgba(78, 205, 196, 0.3),
+                0 0 30px rgba(69, 183, 209, 0.2);
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            right: -30px;
+            bottom: -30px;
+            background: radial-gradient(
+                circle,
+                rgba(255, 107, 107, 0.15) 0%,
+                rgba(78, 205, 196, 0.15) 50%,
+                rgba(69, 183, 209, 0.15) 100%
+            );
+            filter: blur(20px);
+            opacity: 0;
+            z-index: -1;
+            animation: pulseGlow 5s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+            100% { opacity: 0.3; transform: scale(0.95); }
+        }
+        
+        .logo-3d-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .logo-3d-face {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+        
+        .logo-depth {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+            filter: blur(5px);
+            transform: translateZ(-20px);
+        }
+        
+        .logo-reflection {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            transform: rotateX(80deg) scaleY(0.5);
+            filter: blur(5px);
+            opacity: 0.3;
+        }
+        
+        .logo-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+            animation: shineEffect 6s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        
+        @keyframes shineEffect {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+        
+        .logo-word::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff6b6b, #4ecdc4, #45b7d1, transparent);
+            animation: glowLine 3s infinite;
+        }
+        
+        @keyframes glowLine {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        .coming-soon {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.8rem);
+            font-weight: 500;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: clamp(3px, 1.5vw, 8px);
+            margin-bottom: clamp(1rem, 3vh, 2rem);
+            position: relative;
+            display: inline-block;
+            padding: clamp(0.5rem, 1vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3), 0 0 15px rgba(78, 205, 196, 0.2), 0 0 20px rgba(69, 183, 209, 0.1);
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .coming-soon:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(15px);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 25px rgba(78, 205, 196, 0.4), 0 0 30px rgba(69, 183, 209, 0.3);
+        }
+        
+        .tagline {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: #b8b8d4;
+            margin-bottom: clamp(1.5rem, 4vh, 3rem);
+            text-shadow: 0 0 5px rgba(78, 205, 196, 0.2), 0 0 10px rgba(69, 183, 209, 0.1);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+            width: 100%;
+            max-width: min(600px, 95vw);
+        }
+
+        .tagline:hover {
+            transform: perspective(1000px) rotateX(0deg) translateZ(10px);
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.4), 0 0 15px rgba(69, 183, 209, 0.3);
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: clamp(0.8rem, 2vw, 2rem);
+            margin-bottom: clamp(1.5rem, 4vh, 3rem);
+            width: 100%;
+            max-width: min(600px, 95vw);
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: clamp(0.5rem, 1vw, 1.5rem);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: clamp(60px, 20vw, 100px);
+            transform: perspective(1000px) rotateY(10deg);
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.05), rgba(78, 205, 196, 0.05), rgba(69, 183, 209, 0.05));
+        }
+        
+        .countdown-item:hover {
+            transform: perspective(1000px) rotateY(0deg) translateZ(20px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+        
+        .countdown-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 0 0 15px rgba(255, 107, 107, 0.2), 0 0 20px rgba(78, 205, 196, 0.1);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .countdown-number:hover {
+            transform: perspective(1000px) rotateX(0deg) translateZ(15px);
+            text-shadow: 0 0 15px rgba(69, 183, 209, 0.5), 0 0 25px rgba(255, 107, 107, 0.4), 0 0 30px rgba(78, 205, 196, 0.3);
+        }
+        
+        .countdown-label {
+            font-size: clamp(0.7rem, 1.5vw, 1rem);
+            color: #b8b8d4;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1), 0 0 10px rgba(69, 183, 209, 0.05);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .countdown-label:hover {
+            transform: perspective(1000px) rotateX(0deg) translateZ(10px);
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.3), 0 0 15px rgba(69, 183, 209, 0.2);
+        }
+        
+        .description {
+            width: 100%;
+            max-width: min(600px, 95vw);
+            margin-bottom: clamp(1.5rem, 4vh, 3rem);
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #d1d1e0;
+            line-height: 1.8;
+            text-shadow: 0 0 5px rgba(78, 205, 196, 0.1), 0 0 10px rgba(69, 183, 209, 0.05);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+            padding: 0 clamp(0.5rem, 1vw, 1rem);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .description:hover {
+            transform: perspective(1000px) rotateX(0deg) translateZ(10px);
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.3), 0 0 15px rgba(69, 183, 209, 0.2);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: clamp(1rem, 3vh, 2rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            width: min(50px, 12vw);
+            height: min(50px, 12vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            font-size: clamp(20px, 6vw, 28px);
+            font-weight: bold;
+            transform: perspective(1000px) rotateY(10deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3), 0 0 15px rgba(78, 205, 196, 0.2), 0 0 20px rgba(69, 183, 209, 0.1);
+        }
+        
+        .social-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: perspective(1000px) rotateY(0deg) translateZ(20px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5), 0 0 25px rgba(78, 205, 196, 0.4), 0 0 30px rgba(69, 183, 209, 0.3);
+        }
+        
+        .creative-button {
+            width: auto;
+            padding: clamp(0.5rem, 1vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 25px;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            color: #0a0a18;
+            text-shadow: none;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .creative-button:hover {
+            background: linear-gradient(45deg, #45b7d1, #4ecdc4, #ff6b6b);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.5);
+            color: #ffffff;
+            transform: perspective(1000px) rotateY(0deg) translateZ(20px);
+        }
+        
+        footer {
+            margin-top: auto;
+            padding: clamp(1rem, 3vh, 20px) 0;
+            color: #b8b8d4;
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            text-shadow: 0 0 5px rgba(69, 183, 209, 0.1), 0 0 10px rgba(78, 205, 196, 0.05);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        footer:hover {
+            transform: perspective(1000px) rotateX(0deg) translateZ(10px);
+            text-shadow: 0 0 10px rgba(69, 183, 209, 0.3), 0 0 15px rgba(78, 205, 196, 0.2);
+        }
+        
+        @media (hover: none) {
+            .logo-inner,
+            .coming-soon,
+            .tagline,
+            .countdown-item,
+            .countdown-number,
+            .countdown-label,
+            .description,
+            .social-link,
+            .creative-button,
+            footer {
+                transform: none !important;
+                transition: none;
+            }
+            
+            .coming-soon:hover,
+            .tagline:hover,
+            .countdown-item:hover,
+            .countdown-number:hover,
+            .countdown-label:hover,
+            .description:hover,
+            .social-link:hover,
+            .creative-button:hover,
+            footer:hover {
+                transform: none !important;
+            }
+        }
+        
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding: 10px;
+                min-height: 100vh;
+            }
+            
+            .logo {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .countdown {
+                margin-bottom: 1rem;
+            }
+            
+            .description {
+                margin-bottom: 1rem;
+            }
         }
     </style>
 </head>
@@ -129,44 +623,122 @@
     </div>
     
     <div class="container">
-        <h1>Get Creative</h1>
-        <p>
-            Unleash your imagination in the Lunar Labyrinth. This space is yours to explore, create, and share your own cosmic mysteries.
-        </p>
-        
-        <div class="art-apps-grid">
-            <!-- Pixel Art Generator Card -->
-            <a href="pixel-art-generator/index.html" class="art-app-card">
-                <img src="images/pixel-art-preview.jpg" alt="Pixel Art Generator" class="art-app-image">
-                <h3 class="art-app-title">Pixel Art Generator</h3>
-                <p class="art-app-description">
-                    Create stunning pixel art with various algorithms, patterns, and color schemes. Features cellular automata, Perlin noise, mandalas, and more.
-                </p>
-                <span class="art-app-tag">Interactive Art</span>
-            </a>
-            
-            <!-- Placeholder for future apps -->
-            <div class="art-app-card" style="opacity: 0.5; cursor: not-allowed;">
-                <div class="art-app-image"></div>
-                <h3 class="art-app-title">Coming Soon</h3>
-                <p class="art-app-description">
-                    More creative tools are on their way. Stay tuned for updates!
-                </p>
-                <span class="art-app-tag">Future Release</span>
+        <div class="logo">
+            <div class="logo-inner" id="logoInner">
+                <div class="logo-word logo-word-1">
+                    <span class="logo-text">LUNAR</span>
+                </div>
+                <div class="logo-word logo-word-2">
+                    <span class="logo-text">LABYRINTH</span>
+                </div>
+                <div class="logo-3d-effect">
+                    <div class="logo-3d-face"></div>
+                    <div class="logo-depth"></div>
+                </div>
+                <div class="logo-reflection"></div>
+                <div class="logo-shine"></div>
             </div>
         </div>
-
-        <div class="social-links">
-            <a href="index.html" class="creative-button">Back to Home</a>
-            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">𝕏</a>
+        
+        <div class="coming-soon">Coming Soon</div>
+        
+        <p class="tagline">Discover the mysteries of the Lunar Labyrinth</p>
+        
+        <div class="countdown">
+            <div class="countdown-item">
+                <span class="countdown-number" id="days">00</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="hours">00</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="minutes">00</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="seconds">00</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
         </div>
+        
+        <p class="description"> 
+            Art Becomes Mystery and Collection Transforms into Quest.
+
+Venture into the ethereal realm of Lunar Labyrinth, an unprecedented NFT experience that transcends conventional digital art collection, transforming it into an intricate cosmic treasure hunt. This revolutionary project doesn't merely present art—it challenges you to unravel its secrets, seamlessly blending visual mastery with intellectual enigmas that reward both the aesthetic and investigative mind.
+            Join us on a journey through the Lunar Labyrinth.
+        </p>
+        
+        <div class="social-links">
+            <a href="creative.html" class="creative-button">Get Creative</a>
+            <a href="https://x.com/_lunarlabyrinth?s=21&t=BEgPWv-TomxsseTSAhBXUw" class="social-link" target="_blank">
+                𝕏
+            </a>
+        </div>
+        
         <footer>
             © 2025 Lunar Labyrinth. All rights reserved.
         </footer>
     </div>
     
     <script>
-        // ... existing script ...
+        function createStars() {
+            const stars = document.getElementById('stars');
+            stars.innerHTML = '';
+            
+            const count = window.innerWidth < 768 ? 300 : 500;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                
+                const maxSize = window.innerWidth < 768 ? 2 : 3;
+                const size = Math.random() * maxSize;
+                const colors = ['#ffffff', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                const opacity = Math.random() * 0.8 + 0.2;
+                const delay = Math.random() * 5;
+                
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.backgroundColor = color;
+                star.style.opacity = opacity;
+                star.style.animationDelay = `${delay}s`;
+                
+                stars.appendChild(star);
+            }
+            
+            const shootingStarCount = window.innerWidth < 768 ? 3 : 5;
+            for (let i = 0; i < shootingStarCount; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                
+                const x = Math.random() * window.innerWidth * 0.8;
+                const y = Math.random() * window.innerHeight * 0.8;
+                
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                const delay = Math.random() * 15;
+                
+                shootingStar.style.left = `${x}px`;
+                shootingStar.style.top = `${y}px`;
+                shootingStar.style.background = `linear-gradient(to right, rgba(0,0,0,0), ${color})`;
+                shootingStar.style.animationDelay = `${delay}s`;
+                
+                stars.appendChild(shootingStar);
+            }
+        }
+        
+        window.onload = createStars;
+        window.onresize = createStars;
     </script>
 </body>
-</html> 
+</html>
